@@ -1,4 +1,4 @@
-# Testy do pierwszego zadania zaliczeniowego z Programowania Współbieżnego 2022
+# Testy do pierwszego zadania zaliczeniowego z Programowania Współbieżnego 2022 + narzędzie do wizualizacji
 
 Stworzone przez studentów wydziału MIM Uniwersytetu Warszawskiego.
 
@@ -16,7 +16,7 @@ Zasadniczo jak ktoś ma sensowny pomysł na restrukturyzację tych testów, to z
 - dodać nowe testy w osobnym folderze i odwołanie w `cp2022.tests.Main`.
 
 
-## Narzędzie do wizualizacji
+# Narzędzie do wizualizacji
 Program `vis.py` służy do odtworzenia animacji z instrukcji wyrzuconych przez oficjalny program testowy. Korzysta on z biblioteki `pygame`, którą trzeba pobrać za pomocą:
 
 ```pip3 install pygame```
