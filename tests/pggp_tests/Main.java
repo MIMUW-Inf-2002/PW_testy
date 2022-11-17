@@ -9,6 +9,14 @@ public class Main {
         // If you want to log information, change to true.
         boolean verbose = false;
 
+        System.out.println("Parameter verbose = " + verbose + ". It can be changed in the code of the tests to print the logs.");
+
+        if(verbose) {
+            System.out.println("If the test doesn't check the order of events, the order of logs may not be true.");
+        }
+
+        System.out.println("");
+
         // How much time will elapse between two following actions. Applied only when liveliness is checked.
         SimulationWithBugCheck.timeOfWaitBetweenActionsWhenOrderMatters = 30;
 
