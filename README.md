@@ -31,7 +31,7 @@ Jeśli tekst się nie mieści w oknie, polecam dopasować wielkośc czcionki lub
 
 # Opisy testów
 
-### Opisy testów pggp
+<details><summary>pggp</summary>
 
 - Testy sprawdzające żywotność odczekują 10 milisekund między dwoma kolejnymi akcjami globalnie. Więc mogą zająć dużo czasu. 
   Ten czas można zmniejszyć edytując zmienną `SimulationWithBugCheck.timeOfWaitBetweenActionsWhenOrderMatters` w klasie Main,
@@ -69,3 +69,4 @@ Jeśli tekst się nie mieści w oknie, polecam dopasować wielkośc czcionki lub
 | 28          | Duże i losowe              | BigRandom4                                  | Jest 1000 pracowników, 50 stanowisk i każdy chce zrobić po 10 losowych akcji.                                                                                                                                                                                                                                                                                                                                                                                                                                                 | ❌                              |
 | 29          | Duże i losowe              | BigRandom5                                  | Jest 100 pracowników, 1000 stanowisk i każdy chce zrobić po 10000 losowych akcji. Czas pracy ustawiony na 0.                                                                                                                                                                                                                                                                                                                                                                                                                  | ❌                              |
 | 30          | Wydajność                  | Test30EfficiencyOrderErrorCatch             | Test sprawdza, czy nie zaimplementowano ,,którzy zaczęli chcieć wejść po tym, gdy on zaczął chcieć, odpowiednio, wejść lub zmienić stanowisko''. Najpierw wchodzi osoba A na stanowisko 1 i czeka tam 1 sekundę. Następnie przychodzi osoba B, która chce wejść na stanowisko 1 i poczekać 10 sekund. Potem 1000 osób ustawia się w kolejce do stanowiska 0. Po sekundzie osoba B powinna od razu wejść na stanowisko A, a nie czekać na kolejkę. Stąd test powinien zająć trochę więcej niż 11 sekund - ustawiono limit 15s. | ❌                              |
+  </details>
