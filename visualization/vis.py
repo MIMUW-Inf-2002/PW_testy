@@ -14,6 +14,7 @@ TEXT_GAP = 20
 BIG_FONT_SIZE = 30
 SMALL_FONT_SIZE = 20
 STATION_BOX_HEIGHT = 200
+STATION_BOX_WIDTH = 150
 
 INFO_TXT = 'USE ARROWS TO MOVE FORWARDS/BACKWARDS AND SPACE TO PLAY'
 
@@ -46,6 +47,10 @@ for line in log.split('\n'):
         actors_set.add(actor)
         stations_set.add(station)
 
+    if ' leaves ' in line:
+        actor, station = line.split(' leaves ')
+        actors_set.add(actor)
+
     operations.append(line)
 
 print(actors_set)
@@ -59,10 +64,10 @@ for station_name in sorted(stations_set):
     stations_coords[station_name] = pygame.Rect(
         MARGIN + cumulated_x,
         HEIGHT - MARGIN - STATION_BOX_HEIGHT,
-        text_rect.width + TEXT_GAP,
+        max(STATION_BOX_WIDTH, text_rect.width) + TEXT_GAP,
         STATION_BOX_HEIGHT)
 
-    cumulated_x += text_rect.width + TEXT_GAP * 2
+    cumulated_x += max(STATION_BOX_WIDTH, text_rect.width) + TEXT_GAP * 2
 
 # ================== preparing actors start coordinates ==================
 actors_start_coords = dict()
@@ -94,16 +99,16 @@ for actor in actors_set:
 global_states.append((actors_start_states, workstations_lists, workstations_waiting_lists, home_list))
 
 for line in operations:
+    print(line)
     new_states, new_workstations_lists, new_workstations_waiting_lists, new_home_list = copy.deepcopy(global_states[-1])
     if ' tries to enter the workshop and occupy ' in line:
         actor, station = line.split(' tries to enter the workshop and occupy ')
-        new_states[actor] = ('WAITS', station)
+        new_states[actor] = ('HOME', "")
         new_workstations_waiting_lists[station].append(actor)
     elif ' now occupies ' in line:
         actor, station = line.split(' now occupies ')
-
         prev_workstation = new_states[actor][1]
-        if actor in new_workstations_lists[prev_workstation]:
+        if actor in new_workstations_lists.get(prev_workstation, []):
             new_workstations_lists[prev_workstation].remove(actor)
         if actor in new_home_list:
             new_home_list.remove(actor)
