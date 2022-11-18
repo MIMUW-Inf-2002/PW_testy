@@ -19,7 +19,7 @@ Zasadniczo jak ktoś ma sensowny pomysł na restrukturyzację tych testów, to z
 # Narzędzie do wizualizacji
 Program `vis.py` służy do odtworzenia animacji z instrukcji wyrzuconych przez oficjalny program testowy. Szczegóły w folderze `visualization`. 
 
-Uwaga! Program może zamienić kolejność instrukcji przy wypisywaniu, np. jak dana osoba wychodzi ze stanowiska, najpierw wypisze się wejście na to stanowisko innej osoby (i rozpoczęcie metody use), a potem informacja, że poprzednia wyszła, stąd output programu może nie być miarodajny.
+Uwaga! Program może zamienić kolejność instrukcji przy wypisywaniu, stąd output może nie być miarodajny.
 
 # Opisy testów
 
