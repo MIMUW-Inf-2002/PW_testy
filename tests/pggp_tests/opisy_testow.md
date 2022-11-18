@@ -1,41 +1,9 @@
-# Testy do pierwszego zadania zaliczeniowego z Programowania Współbieżnego 2022 + narzędzie do wizualizacji
-
-Stworzone przez studentów wydziału MIM Uniwersytetu Warszawskiego.
-
-# Uruchamiane testów
-
-
-Proponujemy dwa typy uruchamiania
-- do debugowania należy skopiować folder `tests` do folderu `cp2022`, a następnie uruchomić funkcję `main()` w klasie `cp2022.tests.Main`. Da się to relatywnie łatwo zrobić za pomocą IDE.
-- do testowania właściwego spakowania można użyć komend: `chmod u+x ./zip_test.sh` do ustawienia uprawnień oraz `./zip_test.sh ab123456.zip` do uruchomienia testów. 
-
-# Dodawanie testów
-
-Zasadniczo jak ktoś ma sensowny pomysł na restrukturyzację tych testów, to zachęcamy. Na ten moment moża:
-- edytować testy pggp,
-- dodać nowe testy w osobnym folderze i odwołanie w `cp2022.tests.Main`.
-
-
-# Narzędzie do wizualizacji
-Program `vis.py` służy do odtworzenia animacji z instrukcji wyrzuconych przez oficjalny program testowy. Korzysta on z biblioteki `pygame`, którą trzeba pobrać za pomocą:
-
-```pip3 install pygame```
-
-Należy umieścić wyjście programu w pliku `log.txt` (obecnie znajduje się tam przykładowy błędny log), a następnie uruchomić program poleceniem:
-
-```python3 vis.py```
-
-W przypadku, gdy polecenia nie działają, można spróbować `python` oraz `pip` (program jest napisany w pythonie 3).
-
-Jeśli tekst się nie mieści w oknie, polecam dopasować wielkośc czcionki lub okna za pomocą stałych na początku skryptu.
-
-# Opisy testów
-
-<details><summary>pggp</summary>
+# Opisy testów pggp
 
 - Testy sprawdzające żywotność odczekują 10 milisekund między dwoma kolejnymi akcjami globalnie. Więc mogą zająć dużo czasu. 
   Ten czas można zmniejszyć edytując zmienną `SimulationWithBugCheck.timeOfWaitBetweenActionsWhenOrderMatters` w klasie Main,
-- Do debugowania zaleca się włączenie `verbose = true` w klasie `Main`. Powinno wystarczyć. Przy czym jeśli nie jest sprawdzana żywotność, to nie ma 100% gwarancji, że kolejność wypisań się zgadza.
+- Do debugowania zaleca się włączenie `verbose = true` w klasie `Main`. Powinno wystarczyć. Przy czym jeśli nie jest sprawdzana żywotnośc,
+  to nie ma 100% gwarancji, że kolejność wypisań się zgadza.
 
 | Numer testu | Kategoria                  | Nazwa Testu                                 | Opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Czy sprawdzana jest żywotność? |
 |-------------|----------------------------|---------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------|
@@ -69,4 +37,3 @@ Jeśli tekst się nie mieści w oknie, polecam dopasować wielkośc czcionki lub
 | 28          | Duże i losowe              | BigRandom4                                  | Jest 1000 pracowników, 50 stanowisk i każdy chce zrobić po 10 losowych akcji.                                                                                                                                                                                                                                                                                                                                                                                                                                                 | ❌                              |
 | 29          | Duże i losowe              | BigRandom5                                  | Jest 100 pracowników, 1000 stanowisk i każdy chce zrobić po 10000 losowych akcji. Czas pracy ustawiony na 0.                                                                                                                                                                                                                                                                                                                                                                                                                  | ❌                              |
 | 30          | Wydajność                  | Test30EfficiencyOrderErrorCatch             | Test sprawdza, czy nie zaimplementowano ,,którzy zaczęli chcieć wejść po tym, gdy on zaczął chcieć, odpowiednio, wejść lub zmienić stanowisko''. Najpierw wchodzi osoba A na stanowisko 1 i czeka tam 1 sekundę. Następnie przychodzi osoba B, która chce wejść na stanowisko 1 i poczekać 10 sekund. Potem 1000 osób ustawia się w kolejce do stanowiska 0. Po sekundzie osoba B powinna od razu wejść na stanowisko A, a nie czekać na kolejkę. Stąd test powinien zająć trochę więcej niż 11 sekund - ustawiono limit 15s. | ❌                              |
-  </details>
