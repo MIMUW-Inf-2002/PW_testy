@@ -4,7 +4,7 @@ Program `vis.py` służy do odtworzenia animacji z instrukcji wyrzuconych przez 
 
 ```pip3 install pygame```
 
-Należy umieścić wyjście programu w pliku `log.txt` (obecnie znajduje się tam przykładowy błędny log), a następnie uruchomić program poleceniem:
+Należy umieścić wyjście programu w pliku `log.txt` (obecnie znajduje się tam przykładowy błędny log), a następnie wewnątrz folderu `visualization` uruchomić program poleceniem:
 
 ```python3 vis.py```
 
