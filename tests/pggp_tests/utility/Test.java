@@ -14,6 +14,11 @@ public abstract class Test {
         return new Sleep(milliseconds);
     }
 
+    protected Action sleepRandomBetween(int min, int max) {
+        Random r = new Random();
+        return sleep(min + r.nextInt(max - min));
+    }
+
     protected Action enter(int workplaceId) {
         return new Enter(workplaceId);
     }
@@ -46,34 +51,25 @@ public abstract class Test {
     public Action[] rotateCycle(int begin, int first, int last, int len) {
         Action[] actions = new Action[len];
         actions[0] = enter(begin);
-        for (int i = 1; i < len - 1; i += 2) {
-            actions[i] = switchTo(first + (begin + i) % (last - first + 1));
-            actions[i + 1] = use();
+        for (int i = 1; i < len - 2; i += 2) {
+            actions[i] = use();
+            actions[i + 1] = switchTo(first + (begin + i / 2) % (last - first + 1));
         }
+        actions[len - 1] = use();
         actions[len - 1] = leave();
         return actions;
     }
 
     protected Action[] inUseOut(int workplaceId, int times) {
         Action[] actions = new Action[3 * times];
-        for (int i = 0; i < 3 * times; i++) {
+        for (int i = 0; i < 3 * times; i += 3) {
             actions[i] = enter(workplaceId);
-            actions[i] = use();
-            actions[i] = leave();
+            actions[i + 1] = use();
+            actions[i + 2] = leave();
         }
         return actions;
     }
 
-    // Worker enters and leaves the workshop many times.
-    protected Action[] inOut(int workplaceId,
-                             int times) {
-        Action[] actions = new Action[3 * times];
-        for (int i = 0; i < 3 * times; i += 2) {
-            actions[i] = enter(workplaceId);
-            actions[i + 1] = leave();
-        }
-        return actions;
-    }
 
     // Worker jumps between workplaces wid1 and wid2.
     protected Action[] jumpBetween(int wid1, int wid2, int times) {
