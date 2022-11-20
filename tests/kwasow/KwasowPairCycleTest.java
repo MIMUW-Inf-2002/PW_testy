@@ -51,8 +51,8 @@ public class KwasowPairCycleTest {
           workplace.use();
         }
 
-        workshop.leave();
         log(myName + " leaves the workshop", verbose);
+        workshop.leave();
       } catch (IllegalStateException e) {
         for (Thread t : threads) {
           t.interrupt();

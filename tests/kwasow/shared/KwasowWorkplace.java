@@ -32,7 +32,7 @@ public class KwasowWorkplace extends Workplace {
     }
 
     try {
-      sleep(random.nextInt(1000) + 2000);
+      sleep(random.nextInt(200) + 100);
     } catch (InterruptedException e) {
       throw new RuntimeException("panic: unexpected thread interruption");
     } finally {
