@@ -7,7 +7,7 @@ import cp2022.tests.pggp_tests.utility.Worker;
 public class TestBigRandom2 extends Test {
     // Podobne jak wyżej, tylko z nieco innymi parametrami np. jak często ludzie wychodzą.
     public TestBigRandom2() {
-        timeOfAuthor = 1196L;
+        timeOfAuthor = 21196L;
     }
     public boolean run(Boolean verbose) {
         Worker[] workers = new Worker[100];

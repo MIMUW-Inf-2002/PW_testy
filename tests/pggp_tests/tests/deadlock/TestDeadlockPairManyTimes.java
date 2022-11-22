@@ -8,7 +8,7 @@ import cp2022.tests.pggp_tests.utility.workshop_actions.Action;
 public class TestDeadlockPairManyTimes extends Test {
     // Tak jak poprzedni test, przy czym pracownicy zamieniają się wielokrotnie.
     public TestDeadlockPairManyTimes() {
-        timeOfAuthor = 2545L;
+        timeOfAuthor = 8992L;
     }
     public boolean run(Boolean verbose) {
         Action[] firstWorkerActions = new Action[400003];

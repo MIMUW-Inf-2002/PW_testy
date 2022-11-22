@@ -2,6 +2,7 @@ package cp2022.tests.pggp_tests;
 
 import cp2022.tests.pggp_tests.tests.bigrandom.*;
 import cp2022.tests.pggp_tests.tests.deadlock.*;
+import cp2022.tests.pggp_tests.tests.efficiency.TestEfficiencyBigRandom;
 import cp2022.tests.pggp_tests.tests.efficiency.TestEfficiencyCycle;
 import cp2022.tests.pggp_tests.tests.efficiency.TestEfficiencyOrderErrorCatch;
 import cp2022.tests.pggp_tests.tests.efficiency.TestEfficiencyParallel;
@@ -16,10 +17,17 @@ public class Main {
         boolean verbose = false;
 
         System.out.println("Parameter verbose = " + verbose + ". It can be changed in the code of the tests to print the logs.");
+        System.out.println("Tests add some operations after and before switch, enter and leave. Since we are unable to detect" +
+                "when this functions start and finish – all tests should be passed.");
 
         if(verbose) {
             System.out.println("If the test doesn't check the order of events, the order of logs may not be true.");
         }
+
+
+        System.out.println("If test has 'starvation' in name it will be slow due to test architecture.");
+
+        System.out.println("Tests add something to the");
 
         System.out.println("");
 
@@ -36,6 +44,8 @@ public class Main {
                 new TestSimpleSwitchAndUse(),
                 new TestSimpleQueueInsideAndUse(),
                 new TestSimpleOneStaysOneMoves(),
+                new TestSimpleOneWorkplaceManyTimes(),
+                new TestSimpleTwoQueues(),
                 new TestDeadlockPair(),
                 new TestDeadlockPairManyTimes(),
                 new TestDeadlockTriCycle(),
@@ -51,10 +61,14 @@ public class Main {
                 new TestBigRandomRotations(),
                 new TestBigRandom1(),
                 new TestBigRandom2(),
-                new TestBigRandomStarvation(),
                 new TestBigRandom3(),
                 new TestBigRandom4(),
                 new TestBigRandom5(),
+                new TestBigRandom6(),
+                new TestBigRandomStarvation(),
+                new TestBigRandom7(),
+                new TestBigRandomStarvation2(),
+                new TestEfficiencyBigRandom(),
                 new TestEfficiencyOrderErrorCatch()
         };
 
@@ -63,7 +77,7 @@ public class Main {
             System.out.print("Test " + test.getClass().getSimpleName());
             if( test.getTimeOfAuthor() != null) {
                 // Czasy tymczasowo nieaktualne, wrócą.
-                // System.out.print(" (author's time on students " + test.getTimeOfAuthor() + "ms - not very important)");
+                 System.out.println(" (author's time on students " + test.getTimeOfAuthor() + "ms.)");
             }
             System.out.println();
             if(test.getTimeLimit() != null) {

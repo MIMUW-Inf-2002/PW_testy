@@ -9,7 +9,7 @@ public class TestSimpleSwitchRepeated extends Test {
     // Tak jak powyżej, tylko pracownik wchodzi i wychodzi z warsztatu kilkukrotnie.
 
     public TestSimpleSwitchRepeated() {
-        timeOfAuthor = 3L;
+        timeOfAuthor = 3014L;
     }
     public boolean run(Boolean verbose) {
         Action[] firstWorkerActions = {

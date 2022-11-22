@@ -16,6 +16,9 @@ public abstract class Test {
 
     protected Action sleepRandomBetween(int min, int max) {
         Random r = new Random();
+        if(max == min) {
+            return doNothing();
+        }
         return sleep(min + r.nextInt(max - min));
     }
 
@@ -34,6 +37,8 @@ public abstract class Test {
     protected Action use() {
         return new Use();
     }
+
+    protected Action doNothing() { return new DoNothing(); }
 
     protected Long timeLimit = null;
     protected Long timeOfAuthor = null;
@@ -73,70 +78,101 @@ public abstract class Test {
 
     // Worker jumps between workplaces wid1 and wid2.
     protected Action[] jumpBetween(int wid1, int wid2, int times) {
-        Action[] actions = new Action[times + 1];
+        Action[] actions = new Action[2 * times + 3];
         actions[0] = enter(wid1);
-        for (int i = 1; i < times; i++) {
+        for (int i = 1; i <= 2 * times - 1; i += 2) {
             if(i % 2 == 1) {
-                actions[i] = switchTo(wid2);
+                actions[i] = use();
+                actions[i + 1] = switchTo(wid2);
             }
             else {
-                actions[i] = switchTo(wid1);
+                actions[i] = use();
+                actions[i + 1] = switchTo(wid1);
             }
         }
-        actions[times] = leave();
+        actions[2 * times + 1] = use();
+        actions[2 * times + 2] = leave();
         return actions;
     }
 
     // Worker enters the workshop and does switch() randomly.
     protected Worker workerRandomSwitches(int id, int numberOfActions, int numberOfWorkplaces) {
         Random rand = new Random();
-        Action[] actions = new Action[numberOfActions + 2];
+        Action[] actions = new Action[2 * numberOfActions + 3];
         actions[0] = enter(rand.nextInt(numberOfWorkplaces));
-        actions[numberOfActions + 1] = leave();
+        actions[1] = use();
+        actions[2 * numberOfActions + 2] = leave();
         int previous = -1;
         int current = -1;
-        for (int j = 1; j < numberOfActions + 1; j++) {
+        for (int j = 2; j <= 2 * numberOfActions; j += 2) {
             while (current == previous) {
                 current = rand.nextInt(numberOfWorkplaces);
             }
             actions[j] = switchTo(current);
+            actions[j + 1] = use();
             previous = current;
         }
         return new Worker(id, actions);
     }
 
     protected Worker workerRandomActions(int id, int numberOfActions, int numberOfWorkplaces, int percentChanceLeave) {
+        return workerRandomActionsAndSleeps(
+                id,
+                numberOfActions,
+                numberOfWorkplaces,
+                percentChanceLeave,
+                0,
+                0
+        );
+    }
+
+    protected Worker workerRandomActionsAndSleeps(
+            int id,
+            int numberOfActions,
+            int numberOfWorkplaces,
+            int percentChanceLeave,
+            int percentChanceSleep,
+            int maxSleep) {
         boolean inside = true;
         Random rand = new Random();
-        Action[] actions = new Action[numberOfActions + 2];
+        Action[] actions = new Action[2 * numberOfActions + 3];
         actions[0] = enter(rand.nextInt(numberOfWorkplaces));
-        actions[numberOfActions + 1] = leave();
+        actions[1] = use();
 
-        int previous = -1;
-        int current = -1;
-        for (int j = 1; j < numberOfActions + 1; j++) {
+        for (int j = 2; j < 2 * numberOfActions + 1; j += 2) {
             if(inside){
-
-                while (current == previous) {
-                    current = rand.nextInt(numberOfWorkplaces);
-                }
-                previous = current;
-                if(rand.nextInt() % 100 < percentChanceLeave){
+                int toss = rand.nextInt() % 100;
+                if(toss < percentChanceLeave){
                     actions[j] = leave();
+                    actions[j + 1] = doNothing();
                     inside = false;
-                }
-                else{
-                    actions[j] = switchTo(current);
+                } else if (toss < percentChanceLeave + percentChanceSleep) {
+                    actions[j] = sleepRandomBetween(0, maxSleep);
+                    actions[j + 1] = doNothing();
+                } else{
+                    actions[j] = switchTo(rand.nextInt(numberOfWorkplaces));
+                    actions[j + 1] = use();
                 }
             }
             else{
-                actions[j] = enter(rand.nextInt(numberOfWorkplaces));
-                inside = true;
+                int toss = rand.nextInt() % 100;
+                if(toss < percentChanceSleep){
+                    actions[j] = sleepRandomBetween(0, maxSleep);
+                    actions[j + 1] = doNothing();
+                }
+                else {
+                    actions[j] = enter(rand.nextInt(numberOfWorkplaces));
+                    actions[j + 1] = use();
+                    inside = true;
+                }
             }
         }
 
-        if(actions[numberOfActions] instanceof Leave) {
-            actions[numberOfActions] = switchTo((previous + 1) % numberOfWorkplaces);
+        if(inside) {
+            actions[2 * numberOfActions + 2] = leave();
+        }
+        else {
+            actions[2 * numberOfActions + 2] = doNothing();
         }
         return new Worker(id, actions);
     }
@@ -152,6 +188,9 @@ public abstract class Test {
     }
     public Action[] concat(Action action, Action[] array2) {
         return concat(new Action[]{action}, array2);
+    }
+    public Action[] concat(Action[] array1, Action action2) {
+        return concat(array1, new Action[]{action2});
     }
 
     public abstract boolean run(Boolean verbose);

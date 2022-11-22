@@ -9,7 +9,7 @@ public class TestSimpleQueue extends Test {
     // Kolejka 5 pracowników oczekuje na wejście do jednego stanowiska. Celem sprawdzenia żywotności przychodzą po sobie z opóźnieniem.
 
     public TestSimpleQueue() {
-        timeOfAuthor = 960L;
+        timeOfAuthor = 1288L;
     }
 
     @Override

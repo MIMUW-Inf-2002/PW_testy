@@ -9,7 +9,7 @@ import cp2022.tests.pggp_tests.utility.workshop_actions.Action;
 public class TestSimpleOneWorkplace extends Test {
     // Prosty test z jednym stanowiskiem i pracownikiem, który wchodzi i wychodzi z niego kilkukrotnie.
     public TestSimpleOneWorkplace() {
-        timeOfAuthor = 19L;
+        timeOfAuthor = 421L;
     }
     public boolean run(Boolean verbose) {
 

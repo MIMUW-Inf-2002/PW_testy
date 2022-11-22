@@ -8,7 +8,7 @@ public class TestStarvationTricycleAndQueue extends Test {
     // Jeden 3-cykl oraz bardzo długa kolejka do 4 stanowiska. UWAGA! Test zakłada, że jeśli jeden użytkownik wejdzie do warsztatu wielokrotnie to liczy się jako inny.
 
     public TestStarvationTricycleAndQueue() {
-        timeOfAuthor = 19101L;
+        timeOfAuthor = 34101L;
     }
     public boolean run(Boolean verbose) {
         Worker[] workers = {

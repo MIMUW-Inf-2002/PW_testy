@@ -9,7 +9,7 @@ public class TestStarvationBigStar extends Test {
     // Są 102 stanowiska, na stanowisko 0 swobodnie wchodzą ludzie i wychodzą. Na stanowiska 1-100 weszli ludzie. Chcą zmienić na stanowisko 101 i wyjść.
 
     public TestStarvationBigStar() {
-        timeOfAuthor = 6680L;
+        timeOfAuthor = 9245L;
     }
     public boolean run(Boolean verbose) {
         Worker[] workers = new Worker[100];

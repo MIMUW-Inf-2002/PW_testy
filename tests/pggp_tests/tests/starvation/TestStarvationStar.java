@@ -9,7 +9,7 @@ public class TestStarvationStar extends Test {
     // 3 wierzchołki skaczą pomiędzy stanowiskiem 0 i jednym ze stanowisk spośród 1, 2, 3, innym dla każdego z nich. Poza tym do stanowiska 4 jest długa kolejka.
 
     public TestStarvationStar() {
-        timeOfAuthor = 11236L;
+        timeOfAuthor = 20236L;
     }
     public boolean run(Boolean verbose) {
         Worker[] workers = new Worker[103];

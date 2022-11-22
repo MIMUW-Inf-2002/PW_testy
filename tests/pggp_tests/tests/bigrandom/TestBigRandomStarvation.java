@@ -7,7 +7,7 @@ import cp2022.tests.pggp_tests.utility.Worker;
 public class TestBigRandomStarvation extends Test {
     // Jest 10 pracowników, 5 stanowisk i każdy chce zrobić po 100 losowych akcji.
     public TestBigRandomStarvation() {
-        timeOfAuthor = 34046L;
+        timeOfAuthor = 61046L;
     }
 
     public boolean run(Boolean verbose) {

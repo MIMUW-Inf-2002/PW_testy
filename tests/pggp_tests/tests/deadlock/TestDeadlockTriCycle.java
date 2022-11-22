@@ -9,7 +9,7 @@ public class TestDeadlockTriCycle extends Test  {
     // Cykl złożony z 3 pracowników.
 
     public TestDeadlockTriCycle() {
-        timeOfAuthor = 204L;
+        timeOfAuthor = 206L;
     }
     public boolean run(Boolean verbose) {
         Action[] firstWorkerActions = {

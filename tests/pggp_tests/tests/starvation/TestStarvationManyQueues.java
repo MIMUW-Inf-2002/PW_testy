@@ -8,7 +8,7 @@ import cp2022.tests.pggp_tests.utility.workshop_actions.Action;
 public class TestStarvationManyQueues extends Test {
     // Jest kilka długich kolejek.
     public TestStarvationManyQueues() {
-        timeOfAuthor = 9991L;
+        timeOfAuthor = 15991L;
     }
 
 

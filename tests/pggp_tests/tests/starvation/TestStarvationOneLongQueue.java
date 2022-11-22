@@ -9,7 +9,7 @@ public class TestStarvationOneLongQueue extends Test {
     // Jedna duża kolejka przed wejściem do jednego stanowiska.
 
     public TestStarvationOneLongQueue() {
-        timeOfAuthor = 11129L;
+        timeOfAuthor = 14129L;
     }
     public boolean run(Boolean verbose) {
         Action[] workerActions = {

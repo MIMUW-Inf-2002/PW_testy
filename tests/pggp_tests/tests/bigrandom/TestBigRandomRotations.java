@@ -7,7 +7,7 @@ import cp2022.tests.pggp_tests.utility.Worker;
 public class TestBigRandomRotations extends Test {
     // Jest 100 stanowisk i 100 osób wchodzi i robi po 10 losowych switchy, po czym wychodzi.
     public TestBigRandomRotations() {
-        timeOfAuthor = 125L;
+        timeOfAuthor = 204L;
     }
 
     public boolean run(Boolean verbose) {

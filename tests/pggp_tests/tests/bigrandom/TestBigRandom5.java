@@ -6,8 +6,9 @@ import cp2022.tests.pggp_tests.utility.Worker;
 
 public class TestBigRandom5 extends Test {
     // Jest 100 pracowników, 1000 stanowisk i każdy chce zrobić po 1000 losowych akcji. Czas pracy ustawiony na 0.
-
-
+    public TestBigRandom5() {
+        timeOfAuthor = 12208L;
+    }
     public boolean run(Boolean verbose) {
         Worker[] workers = new Worker[100];
 
