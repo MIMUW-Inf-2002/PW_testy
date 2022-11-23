@@ -10,7 +10,7 @@ public class TestDeadlockOneBigOneSmallCycleWithCommonVertex extends Test {
         timeOfAuthor = 134L;
     }
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
 
         Worker[] workers = {
                 new Worker(1, rotateCycle(0, 0, 2, 100)),

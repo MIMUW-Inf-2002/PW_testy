@@ -10,12 +10,12 @@ public class Sleep implements Action{
         this.milliseconds = milliseconds;
     }
     @Override
-    public void doWork(SimulationWithBugCheck workshop, Worker worker, boolean verbose) {
+    public void doWork(SimulationWithBugCheck workshop, Worker worker, int verbose) {
         try {
-            if(verbose) System.out.println(
+            if(verbose == 1) System.out.println(
                     "Worker " + worker.id.id + " invokes Thread.sleep(" + milliseconds + "ms).");
             Thread.sleep(milliseconds);
-            if(verbose) System.out.println(
+            if(verbose == 1) System.out.println(
                     "Worker " + worker.id.id + " finished Thread.sleep(" + milliseconds + "ms).");
         } catch (InterruptedException e) {
             throw new RuntimeException("Test error - worker was sleeping.");

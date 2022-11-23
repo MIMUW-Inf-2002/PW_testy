@@ -6,7 +6,7 @@ import cp2022.tests.pggp_tests.utility.Worker;
 import cp2022.tests.pggp_tests.utility.workshop_actions.Action;
 
 public class TestSimpleOneWorkplaceManyTimes extends Test {
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Action[] firstWorkerActions = concat(
                 enter(0),
                 repeat(new Action[]{use(), switchTo(0)}, 100));

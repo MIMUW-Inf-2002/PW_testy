@@ -16,7 +16,7 @@ public class TestSimpleTwoQueues extends Test {
      */
 
     @Override
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Action[] worker1Actions = {
                 enter(0),
                 sleep(1000),

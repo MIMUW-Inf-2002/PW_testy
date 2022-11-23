@@ -60,7 +60,7 @@ public abstract class Test {
             actions[i] = use();
             actions[i + 1] = switchTo(first + (begin + i / 2) % (last - first + 1));
         }
-        actions[len - 1] = use();
+        actions[len - 2] = use();
         actions[len - 1] = leave();
         return actions;
     }
@@ -193,7 +193,7 @@ public abstract class Test {
         return concat(array1, new Action[]{action2});
     }
 
-    public abstract boolean run(Boolean verbose);
+    public abstract boolean run(int verbose);
 
     public Long getTimeOfAuthor() {
         return timeOfAuthor;
