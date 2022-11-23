@@ -23,7 +23,7 @@ public class TestStarvationManyQueues extends Test {
         return new Worker(nr, workerActions);
     }
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Worker[] workers = new Worker[99];
 
         for (int i = 0; i < 33; i++) {

@@ -10,7 +10,7 @@ public class TestStarvationTricycleAndQueue extends Test {
     public TestStarvationTricycleAndQueue() {
         timeOfAuthor = 34101L;
     }
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Worker[] workers = {
                 new Worker(1, rotateCycle(0, 0, 2, 10)),
                 new Worker(2, rotateCycle(1, 0, 2, 10)),

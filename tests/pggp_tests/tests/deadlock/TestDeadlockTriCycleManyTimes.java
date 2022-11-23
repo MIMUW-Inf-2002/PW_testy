@@ -11,7 +11,7 @@ public class TestDeadlockTriCycleManyTimes extends Test {
     public TestDeadlockTriCycleManyTimes() {
         timeOfAuthor = 10L;
     }
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Action[] firstWorkerActions = rotateCycle(0, 0, 2, 10);
         Action[] secondWorkerActions = rotateCycle(1, 0, 2, 10);
         Action[] thirdWorkerActions = rotateCycle(2, 0, 2, 10);

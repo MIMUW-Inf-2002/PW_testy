@@ -13,7 +13,7 @@ public class TestSimpleOneUseRepeated extends Test {
     }
 
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Action[] firstWorkerActions = {enter(0), use(),  leave()};
         firstWorkerActions = repeat(firstWorkerActions, 5);
 

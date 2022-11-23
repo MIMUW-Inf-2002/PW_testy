@@ -11,7 +11,7 @@ public class TestStarvationStar extends Test {
     public TestStarvationStar() {
         timeOfAuthor = 20236L;
     }
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Worker[] workers = new Worker[103];
         Action[] workerActions = {
                 enter(0),

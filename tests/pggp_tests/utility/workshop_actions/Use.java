@@ -6,8 +6,8 @@ import cp2022.tests.pggp_tests.utility.SimulationWithBugCheck;
 
 public class Use implements Action{
     @Override
-    public void doWork(SimulationWithBugCheck workshop, Worker worker, boolean verbose) {
-        if(verbose) System.out.println(
+    public void doWork(SimulationWithBugCheck workshop, Worker worker, int verbose) {
+        if(verbose == 1) System.out.println(
                 "Worker " + worker.id.id + " invokes use() on workplace " +
                         workshop.getWorkplaceIntId(worker.getCurrentWorkplace()) + ".");
         Workplace workplace = worker.getCurrentWorkplace();
@@ -19,7 +19,7 @@ public class Use implements Action{
                     + workshop.getWorkplaceIntId(worker.getCurrentWorkplace()) + ", but function use() was not invoked 1 time, probably because some " +
                     "class which wraps Workplace not invoked this method or invoked it more than once.");
         }
-        if(verbose) System.out.println(
+        if(verbose == 1) System.out.println(
                 "Worker " + worker.id.id + " finished use() on workplace " +
                         workshop.getWorkplaceIntId(worker.getCurrentWorkplace()) + ".");
     }

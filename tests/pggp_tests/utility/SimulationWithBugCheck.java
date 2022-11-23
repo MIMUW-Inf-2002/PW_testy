@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 public class SimulationWithBugCheck implements Workshop {
     private final Semaphore mutex; // Mutex for internal use of SimulationWithBugCheck class.
     private final Workshop wrappedWorkshop;
-    public final Boolean verbose;
+    public final int verbose;
 
     public volatile boolean errorBoolean = false;
 
@@ -113,19 +113,24 @@ public class SimulationWithBugCheck implements Workshop {
                 someoneUsesWorkplace.put(this.id, currentWorkerId);
 
                 mutex.release();
+                if (verbose == 2) {
+                    System.out.println("Worker " + currentWorkerId.id + " starts using workplace " + id.id);
+                }
                 if(timeOfWork > 0) Thread.sleep(timeOfWork);
+                if (verbose == 2) {
+                    System.out.println("Worker " + currentWorkerId.id + " stops using workplace " + id.id );
+                }
                 someoneUsesWorkplace.remove(this.id);
             } catch (InterruptedException e) {
                 throw new RuntimeException("Test panic - error in the tests. There should not be any interruption.");
             }
         }
-
     }
 
     public SimulationWithBugCheck(int numberOfWorkplaces,
                                   int timeOfOneWork,
                                   Worker[] workers,
-                                  boolean verbose,
+                                  int verbose,
                                   boolean doCheckLiveliness) {
 
         this.mutex = new Semaphore(1, true); // Mutex used by the simulation.
@@ -340,7 +345,7 @@ public class SimulationWithBugCheck implements Workshop {
                 System.out.println("Worker " + getWorkerIdOfCurrentThread().id + " unsuccessfully tried finish enter().");
                 System.out.println("------------- STARVATION_ERROR --------------");
                 for (WorkerId wid : enteredAfterWorkerRequestList.get(id)) {
-                    if(verbose) {
+                    if(verbose > 0) {
                         System.out.println("Worker " + wid.id + " entered before worker " +
                                 id.id + " fulfilled its request.");
                     }

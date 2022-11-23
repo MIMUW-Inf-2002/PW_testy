@@ -12,7 +12,7 @@ public class TestBigRandom6 extends Test {
         timeOfAuthor = 16509L;
     }
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Worker[] workers = new Worker[100];
 
 
