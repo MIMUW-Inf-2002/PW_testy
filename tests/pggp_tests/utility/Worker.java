@@ -1,7 +1,7 @@
 package cp2022.tests.pggp_tests.utility;
 
 import cp2022.base.Workplace;
-import cp2022.tests.pggp_tests.utility.workshop_actions.Action;
+import cp2022.tests.pggp_tests.utility.workshop_actions.*;
 
 public class Worker {
     public final WorkerId id;
@@ -29,12 +29,15 @@ public class Worker {
         @Override
         public void run() {
 
+            int number_of_work = 0;
+            int needToUse = 0;
             // Doing all actions in the loop.
             for(Action action : this.worker.work) {
                 // We wait some time in the critical section to ensure proper order of the workers.
                 // This function is invoked only if order is checked.
                 ensureOrderWait(workshop);
                 action.doWork(workshop, this.worker, workshop.verbose);
+                number_of_work += 1;
             }
         }
     }

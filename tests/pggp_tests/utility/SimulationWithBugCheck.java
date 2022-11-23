@@ -5,8 +5,7 @@ import cp2022.base.WorkplaceId;
 import cp2022.base.Workshop;
 import cp2022.solution.WorkshopFactory;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 
 /*
@@ -36,13 +35,17 @@ public class SimulationWithBugCheck implements Workshop {
     private final Map <Thread, WorkerId> threadToWorkerId;
     private final Map <WorkerId, Thread> workerIdToThread;
 
-    private final Map<WorkplaceId, WorkerId> workplaceToOwnerLazy;
-    private final Map<WorkerId, WorkplaceId> ownerToWorkplace;
+    private final Map<WorkerId, WorkplaceId> workerToCurrentWorkplace;
+    // If
+    private final Map<WorkerId, WorkplaceId> workerToWorkplaceInReleaseDuration; // workplace
+
+    private final Map<WorkplaceId, WorkerId> someoneUsesWorkplace;
 
     // Used to check liveliness property of the workshop implementation.
     private final Map<WorkerId, Integer> enteredAfterWorkerRequest;
+    private final Map<WorkerId, Collection<WorkerId>> enteredAfterWorkerRequestList;
     private final Map<WorkerId, Integer> requestAge;
-    private int globalAge = 0;
+    private volatile int globalAge = 0;
     private final boolean doCheckLiveliness;
     private final Semaphore orderWait;
 
@@ -92,22 +95,26 @@ public class SimulationWithBugCheck implements Workshop {
         public void use() {
             try {
                 mutex.acquire();
-                WorkerId workplaceOwnerId = workshop.workplaceToOwnerLazy.get(this.id);
                 WorkerId currentWorkerId = workshop.getWorkerIdOfCurrentThread();
 
-                // We check whether our worker posses workplace we want to work on.
-                if(workplaceOwnerId != currentWorkerId) {
-                    // If not, we throw an exception.
-                    errorBoolean = true;
-                    throw new RuntimeException("[Exception] Worker " + currentWorkerId.id + " tried to work on the workplace "
-                            + id.id + ", " + "which is occupied by the worker " + workplaceOwnerId.id);
+                // We check whether our worker posses workplace we want to work on exclusively.
+
+                for(WorkerId workerId : workerToWorkplaceInReleaseDuration.keySet()){
+                    if(workerId != currentWorkerId && workerToWorkplaceInReleaseDuration.get(workerId).compareTo(id) == 0) {
+                        // If not, we throw an exception.
+                        errorBoolean = true;
+                        throw new RuntimeException("[Exception] Worker " + currentWorkerId.id + " tried to work on the workplace "
+                                + id.id + ", " + "which is occupied by the worker " + workerId.id);
+                    }
                 }
 
                 // We increase stored number of usages.
                 usagesOfWorkplace.put(this.id, usagesOfWorkplace.get(this.id) + 1);
+                someoneUsesWorkplace.put(this.id, currentWorkerId);
 
                 mutex.release();
-                Thread.sleep(timeOfWork);
+                if(timeOfWork > 0) Thread.sleep(timeOfWork);
+                someoneUsesWorkplace.remove(this.id);
             } catch (InterruptedException e) {
                 throw new RuntimeException("Test panic - error in the tests. There should not be any interruption.");
             }
@@ -134,11 +141,12 @@ public class SimulationWithBugCheck implements Workshop {
         this.threadToWorkerId = new ConcurrentHashMap<>();
         this.workerIdToThread = new ConcurrentHashMap<>();
 
-        // Can contain old values, but if a has workplace b, then workplaceToOwnerLazy.get(b) = a.
-        this.workplaceToOwnerLazy = new ConcurrentHashMap<>();
-        this.ownerToWorkplace = new ConcurrentHashMap<>();
+        this.workerToCurrentWorkplace = new ConcurrentHashMap<>();
+        this.workerToWorkplaceInReleaseDuration = new ConcurrentHashMap<>();
+        this.someoneUsesWorkplace = new ConcurrentHashMap<>();
 
         this.enteredAfterWorkerRequest = new ConcurrentHashMap<>();
+        this.enteredAfterWorkerRequestList = new ConcurrentHashMap<>();
         this.requestAge = new ConcurrentHashMap<>();
         this.doCheckLiveliness = doCheckLiveliness;
 
@@ -215,8 +223,13 @@ public class SimulationWithBugCheck implements Workshop {
         checkWhetherLivelinessIsAbused();
 
         // Update maps.
-        workplaceToOwnerLazy.put(wid, getWorkerIdOfCurrentThread());
-        ownerToWorkplace.put(getWorkerIdOfCurrentThread(), wid);
+        workerToCurrentWorkplace.put(getWorkerIdOfCurrentThread(), wid);
+
+
+        if(someoneUsesWorkplace.containsKey(wid)) {
+            throw new RuntimeException("Worker " + getWorkerIdOfCurrentThread().id + " tried to enter the workplace "
+                    + getWorkplaceIntId(workplace) + " which is used by the Worker" + someoneUsesWorkplace.get(wid).id);
+        }
 
         mutex.release();
 
@@ -224,9 +237,13 @@ public class SimulationWithBugCheck implements Workshop {
     }
 
     private void increaseAgeByOneForYoungerThan(int time) {
-        for(Map.Entry<WorkerId, Integer> workerId : this.requestAge.entrySet()) {
-            if(workerId.getValue() < time) {
-                workerId.setValue(workerId.getValue() + 1);
+        for(Map.Entry<WorkerId, Integer> pair : this.requestAge.entrySet()) {
+            if(pair.getValue() < time) {
+                enteredAfterWorkerRequest.put(pair.getKey(), enteredAfterWorkerRequest.get(pair.getKey()) + 1);
+                if(enteredAfterWorkerRequestList.get(pair.getKey()) == null) {
+                    enteredAfterWorkerRequestList.put(pair.getKey(), new ConcurrentLinkedQueue<>());
+                }
+                enteredAfterWorkerRequestList.get(pair.getKey()).add(getWorkerIdOfCurrentThread());
             }
         }
     }
@@ -236,7 +253,20 @@ public class SimulationWithBugCheck implements Workshop {
         // Insert request in the map.
         acquireMutexOrPanic();
         putRequest(getWorkerIdOfCurrentThread());
+        WorkplaceId oldWorkplace = workerToCurrentWorkplace.get(getWorkerIdOfCurrentThread());
+
+        workerToWorkplaceInReleaseDuration.put(getWorkerIdOfCurrentThread(), oldWorkplace);
         mutex.release();
+        /*
+            Kilka słów wyjaśnienia, co tu się dzieje.
+            Zasadniczo nie wiadomo kiedy nastąpi koniec funkcji switchTo() – bo pomiędzy ostatnim
+            zwolnieniem elementu synchronizacji a zwróceniem argumentu można zostać odsuniętym od procesora.
+
+            Stąd ,,doklejam'' do switchTo() kilka innych wywołań. Nie jest to w 100% zgodne z opisem zadania,
+            ale jest mu równoważne. To znaczy, jeśli w programie testującym może zajść błąd, to program nie jest poprawny.
+            Chyba że ktoś używa jakichś monitorów i uważa, że lock na obiekcie zwalnia się po wywołaniu metody.
+            No to chyba nie jest prawda, ale jak jest to sorry, wówczas testy mogą nie być odpowiednie. Ale chyba jest ok.
+         */
 
         Workplace workplace = wrappedWorkshop.switchTo(wid);
 
@@ -244,9 +274,14 @@ public class SimulationWithBugCheck implements Workshop {
         acquireMutexOrPanic();
         removeRequest(getWorkerIdOfCurrentThread());
 
+        if(someoneUsesWorkplace.containsKey(wid)) {
+            throw new RuntimeException("Worker " + getWorkerIdOfCurrentThread().id + " tried to enter the workplace "
+                    + getWorkplaceIntId(workplace) + " which is used by the Worker " + someoneUsesWorkplace.get(wid).id);
+        }
+
         // Update info about workshop ownership.
-        ownerToWorkplace.put(getWorkerIdOfCurrentThread(), wid);
-        workplaceToOwnerLazy.put(wid, getWorkerIdOfCurrentThread());
+        workerToCurrentWorkplace.put(getWorkerIdOfCurrentThread(), wid);
+        workerToWorkplaceInReleaseDuration.remove(getWorkerIdOfCurrentThread());
 
         mutex.release();
 
@@ -261,6 +296,7 @@ public class SimulationWithBugCheck implements Workshop {
 
     private void removeRequest(WorkerId workerId) {
         enteredAfterWorkerRequest.remove(workerId);
+        enteredAfterWorkerRequestList.remove(workerId);
         requestAge.remove(workerId);
     }
 
@@ -271,9 +307,9 @@ public class SimulationWithBugCheck implements Workshop {
         removeRequest(getWorkerIdOfCurrentThread());
 
         // Remove info about workshop ownership.
-        WorkplaceId workplace = ownerToWorkplace.get(getWorkerIdOfCurrentThread());
-        ownerToWorkplace.remove(getWorkerIdOfCurrentThread());
-        workplaceToOwnerLazy.remove(workplace);
+        WorkplaceId workplace = workerToCurrentWorkplace.get(getWorkerIdOfCurrentThread());
+        workerToCurrentWorkplace.remove(getWorkerIdOfCurrentThread());
+        workerToWorkplaceInReleaseDuration.remove(getWorkerIdOfCurrentThread());
 
         mutex.release();
         wrappedWorkshop.leave();
@@ -301,6 +337,14 @@ public class SimulationWithBugCheck implements Workshop {
         for(WorkerId id : enteredAfterWorkerRequest.keySet()) {
             if(enteredAfterWorkerRequest.get(id) >= 2 * numberOfWorkplaces) {
                 errorBoolean = true;
+                System.out.println("Worker " + getWorkerIdOfCurrentThread().id + " unsuccessfully tried finish enter().");
+                System.out.println("------------- STARVATION_ERROR --------------");
+                for (WorkerId wid : enteredAfterWorkerRequestList.get(id)) {
+                    if(verbose) {
+                        System.out.println("Worker " + wid.id + " entered before worker " +
+                                id.id + " fulfilled its request.");
+                    }
+                }
                 throw new RuntimeException("Error - 2*N workers entered workshop before worker " +
                         id.id + " make a change.");
             }

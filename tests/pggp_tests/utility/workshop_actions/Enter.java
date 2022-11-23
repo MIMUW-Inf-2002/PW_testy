@@ -13,10 +13,10 @@ public class Enter implements Action{
     @Override
     public void doWork(SimulationWithBugCheck workshop, Worker worker, boolean verbose) {
         if(verbose) System.out.println(
-                "Worker " + worker.id.id + " invokes enter(" + workplaceId + ").");
+                "Worker " + worker.id.id + " invokes enter(wokrplace " + workplaceId + ").");
         worker.setCurrentWorkplace(workshop.enter(workshop.getWorkplaceId(workplaceId)));
         if(verbose) System.out.println(
-                "Worker " + worker.id.id + " finished enter(" + workplaceId + ")."
+                "Worker " + worker.id.id + " finished enter(workplace " + workplaceId + ")."
         );
     }
 
