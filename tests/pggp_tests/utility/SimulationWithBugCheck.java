@@ -125,6 +125,11 @@ public class SimulationWithBugCheck implements Workshop {
                 throw new RuntimeException("Test panic - error in the tests. There should not be any interruption.");
             }
         }
+
+        @Override
+        public String toString() {
+            return "workplace "+ id.id;
+        }
     }
 
     public SimulationWithBugCheck(int numberOfWorkplaces,
