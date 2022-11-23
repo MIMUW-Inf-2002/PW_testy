@@ -39,7 +39,6 @@ public class Main {
                 new TestSimpleQueue(),
                 new TestSimpleOneUse(),
                 new TestSimpleOneUseRepeated(),
-//                new TestSimpleSwitch(),
                 new TestSimpleSwitchRepeated(),
                 new TestSimpleSwitchAndUse(),
                 new TestSimpleQueueInsideAndUse(),
