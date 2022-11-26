@@ -22,7 +22,7 @@ public class TestEfficiencyParallel extends Test {
         );
     }
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
 
         Worker[] workers = {
                 worker(1),

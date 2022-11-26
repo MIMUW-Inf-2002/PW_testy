@@ -11,11 +11,15 @@ public class SwitchTo implements Action{
     }
 
     @Override
-    public void doWork(SimulationWithBugCheck workshop, Worker worker, boolean verbose) {
-        if(verbose) System.out.println(
+    public void doWork(SimulationWithBugCheck workshop, Worker worker, int verbose) {
+        if(verbose == 1) System.out.println(
                 "Worker " + worker.id.id + " invokes switchTo(" + wid + ").");
+        if(verbose == 2) System.out.println(
+                "Worker " + worker.id.id + " tries to switch its workplace to workplace " + wid);
         worker.setCurrentWorkplace(workshop.switchTo(workshop.getWorkplaceId(wid)));
-        if(verbose) System.out.println(
+        if(verbose == 1) System.out.println(
                 "Worker " + worker.id.id + " finished switchTo(" + wid + ").");
+        if(verbose == 2) System.out.println(
+                "Worker " + worker.id.id + " now occupies workplace " + wid);
     }
 }

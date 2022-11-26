@@ -16,4 +16,9 @@ public class WorkplaceIdImplementation extends WorkplaceId {
         }
         return this.id.compareTo(((WorkplaceIdImplementation)other).id);
     }
+
+    @Override
+    public String toString() {
+        return "wId(" + id + ")";
+    }
 }

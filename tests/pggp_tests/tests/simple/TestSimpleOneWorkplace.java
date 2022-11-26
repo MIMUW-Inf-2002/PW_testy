@@ -11,7 +11,7 @@ public class TestSimpleOneWorkplace extends Test {
     public TestSimpleOneWorkplace() {
         timeOfAuthor = 421L;
     }
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
 
         Action[] firstWorkerActions = {enter(0), use(),  leave()};
         firstWorkerActions = repeat(firstWorkerActions, 4);

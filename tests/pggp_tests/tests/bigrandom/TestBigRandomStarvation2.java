@@ -12,7 +12,7 @@ public class TestBigRandomStarvation2 extends Test {
     public TestBigRandomStarvation2() {
         timeOfAuthor = 61320L;
     }
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Worker[] workers = new Worker[10];
 
         for (int i = 0; i < 10; i++) {

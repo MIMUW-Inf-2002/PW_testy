@@ -12,7 +12,7 @@ public class TestDeadlockPair extends Test {
         timeOfAuthor = 204L;
     }
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Action[] firstWorkerActions = {
                 enter(0),
                 sleep(100),

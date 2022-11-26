@@ -11,7 +11,7 @@ public class TestEfficiencyCycle extends Test {
         timeOfAuthor = 4232L;
     }
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
 
         Worker[] workers = new Worker[20];
 

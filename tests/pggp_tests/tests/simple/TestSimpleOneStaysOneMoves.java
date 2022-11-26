@@ -11,7 +11,7 @@ public class TestSimpleOneStaysOneMoves extends Test {
         timeOfAuthor = 352L;
     }
 
-    public boolean run(Boolean verbose) {
+    public boolean run(int verbose) {
         Action[] firstWorkerActions = {
                 enter(0),
                 use(),
