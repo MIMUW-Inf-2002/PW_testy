@@ -27,7 +27,7 @@ Uwaga! Program może zamienić kolejność instrukcji przy wypisywaniu, stąd ou
 
 - Testy sprawdzające żywotność odczekują 10 milisekund między dwoma kolejnymi akcjami globalnie. Więc mogą zająć dużo czasu. 
   Ten czas można zmniejszyć edytując zmienną `SimulationWithBugCheck.timeOfWaitBetweenActionsWhenOrderMatters` w klasie Main,
-- Do debugowania zaleca się włączenie `verbose = true` w klasie `Main`. Powinno wystarczyć. Przy czym jeśli nie jest sprawdzana żywotność, to nie ma 100% gwarancji, że kolejność wypisań się zgadza.
+- Do debugowania zaleca się włączenie `verbose = 2` w klasie `Main`. Powinno wystarczyć. Przy czym jeśli nie jest sprawdzana żywotność, to nie ma 100% gwarancji, że kolejność wypisań się zgadza.
 
 | Numer testu | Kategoria                  | Nazwa Testu                                 | Opis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Czy sprawdzana jest żywotność? |
 |-------------|----------------------------|---------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------|
@@ -62,3 +62,17 @@ Uwaga! Program może zamienić kolejność instrukcji przy wypisywaniu, stąd ou
 | 29          | Duże i losowe              | BigRandom5                                  | Jest 100 pracowników, 1000 stanowisk i każdy chce zrobić po 10000 losowych akcji. Czas pracy ustawiony na 0.                                                                                                                                                                                                                                                                                                                                                                                                                  | ❌                              |
 | 30          | Wydajność                  | Test30EfficiencyOrderErrorCatch             | Test sprawdza, czy nie zaimplementowano ,,którzy zaczęli chcieć wejść po tym, gdy on zaczął chcieć, odpowiednio, wejść lub zmienić stanowisko''. Najpierw wchodzi osoba A na stanowisko 1 i czeka tam 1 sekundę. Następnie przychodzi osoba B, która chce wejść na stanowisko 1 i poczekać 10 sekund. Potem 1000 osób ustawia się w kolejce do stanowiska 0. Po sekundzie osoba B powinna od razu wejść na stanowisko A, a nie czekać na kolejkę. Stąd test powinien zająć trochę więcej niż 11 sekund - ustawiono limit 15s. | ❌                              |
   </details>
+
+
+<details><summary>kwasow</summary>
+
+Do debugowania zalecam ustawienie `verbose = true` w klasie `KwasowMain`. Nie ma gwarancji, że
+kolejność wypisywania jest prawidłowa ze względu na przeploty. Output jest kompatybilny
+z narzędziem do wizualizacji.
+
+Opisy testów znajdują się w klasie `KwasowMain`.
+
+Testy zawsze kończą się kodem 0. Jeśli pojawi się deadlock, to testy nie kończą się. Jeśli zajdzie
+sytuacja niedozwolona, to wypisują wyjątek.
+
+</details>
