@@ -72,4 +72,7 @@ z narzędziem do wizualizacji.
 
 Opisy testów znajdują się w klasie `KwasowMain`.
 
+Testy zawsze kończą się kodem 0. Jeśli pojawi się deadlock, to testy nie kończą się. Jeśli zajdzie
+sytuacja niedozwolona, to wypisują wyjątek.
+
 </details>
