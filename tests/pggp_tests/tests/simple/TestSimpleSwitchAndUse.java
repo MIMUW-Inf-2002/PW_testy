@@ -27,6 +27,7 @@ public class TestSimpleSwitchAndUse extends Test {
                 switchTo(1),
                 use(),
                 switchTo(2),
+                use(),
                 leave()
         };
 

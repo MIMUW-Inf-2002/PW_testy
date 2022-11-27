@@ -97,6 +97,15 @@ public class SimulationWithBugCheck implements Workshop {
                 mutex.acquire();
                 WorkerId currentWorkerId = workshop.getWorkerIdOfCurrentThread();
 
+                WorkplaceIdImplementation printableWid = id;
+
+                if(verbose == 1) System.out.println(
+                        "Worker " + currentWorkerId.id + " invokes use() on workplace " +
+                                printableWid.id.intValue() + ".");
+                if (verbose == 2) {
+                    System.out.println("Worker " + currentWorkerId.id + " starts using workplace " + id);
+                }
+
                 // We check whether our worker posses workplace we want to work on exclusively.
 
                 for(WorkerId workerId : workerToWorkplaceInReleaseDuration.keySet()){
@@ -113,14 +122,18 @@ public class SimulationWithBugCheck implements Workshop {
                 someoneUsesWorkplace.put(this.id, currentWorkerId);
 
                 mutex.release();
-                if (verbose == 2) {
-                    System.out.println("Worker " + currentWorkerId.id + " starts using workplace " + id.id);
-                }
                 if(timeOfWork > 0) Thread.sleep(timeOfWork);
+
+                acquireMutexOrPanic();
+                if(verbose == 1) System.out.println(
+                        "Worker " + currentWorkerId.id + " finished use() on workplace " +
+                                id.id.intValue() + ".");
                 if (verbose == 2) {
-                    System.out.println("Worker " + currentWorkerId.id + " stops using workplace " + id.id );
+                    System.out.println("Worker " + currentWorkerId.id + " stops using workplace " + id );
                 }
                 someoneUsesWorkplace.remove(this.id);
+                mutex.release();
+
             } catch (InterruptedException e) {
                 throw new RuntimeException("Test panic - error in the tests. There should not be any interruption.");
             }
@@ -216,6 +229,13 @@ public class SimulationWithBugCheck implements Workshop {
         acquireMutexOrPanic();
 
 
+        WorkplaceIdImplementation widToPrint = (WorkplaceIdImplementation) wid;
+        if(verbose == 1) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " invokes enter(wokrplace " + widToPrint.id.intValue() + ").");
+        if(verbose == 2) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " tries to enter the workshop and occupy workplace " + widToPrint);
+
+
         // We put the request to enter into proper Map.
         putRequest(getWorkerIdOfCurrentThread());
         mutex.release();
@@ -241,6 +261,12 @@ public class SimulationWithBugCheck implements Workshop {
                     + getWorkplaceIntId(workplace) + " which is used by the Worker" + someoneUsesWorkplace.get(wid).id);
         }
 
+
+        if(verbose == 1) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " finished enter(workplace " + widToPrint.id.intValue() + ").");
+        if(verbose == 2) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " now occupies workplace " + widToPrint);
+
         mutex.release();
 
         return workplace;
@@ -262,6 +288,14 @@ public class SimulationWithBugCheck implements Workshop {
     public Workplace switchTo(WorkplaceId wid) {
         // Insert request in the map.
         acquireMutexOrPanic();
+
+        WorkplaceIdImplementation widToPrint = (WorkplaceIdImplementation) wid;
+
+
+        if(verbose == 1) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " invokes switchTo(" + widToPrint.id + ").");
+        if(verbose == 2) System.out.println(
+                "Worker " +  getWorkerIdOfCurrentThread().id + " tries to switch its workplace to workplace " + widToPrint);
         putRequest(getWorkerIdOfCurrentThread());
         WorkplaceId oldWorkplace = workerToCurrentWorkplace.get(getWorkerIdOfCurrentThread());
 
@@ -282,6 +316,12 @@ public class SimulationWithBugCheck implements Workshop {
 
         // Remove request in the map.
         acquireMutexOrPanic();
+
+        if(verbose == 1) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " finished switchTo(" + widToPrint.id + ").");
+        if(verbose == 2) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " now occupies workplace " + widToPrint);
+
         removeRequest(getWorkerIdOfCurrentThread());
 
         if(someoneUsesWorkplace.containsKey(wid)) {
@@ -314,12 +354,20 @@ public class SimulationWithBugCheck implements Workshop {
     public void leave() {
         // Remove request in the map.
         acquireMutexOrPanic();
+
+        if(verbose == 1) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " invokes leave().");
+        if(verbose == 2) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " leaves the workshop");
         removeRequest(getWorkerIdOfCurrentThread());
 
         // Remove info about workshop ownership.
         WorkplaceId workplace = workerToCurrentWorkplace.get(getWorkerIdOfCurrentThread());
         workerToCurrentWorkplace.remove(getWorkerIdOfCurrentThread());
         workerToWorkplaceInReleaseDuration.remove(getWorkerIdOfCurrentThread());
+
+        if(verbose == 1) System.out.println(
+                "Worker " + getWorkerIdOfCurrentThread().id + " finished leave().");
 
         mutex.release();
         wrappedWorkshop.leave();

@@ -16,7 +16,6 @@ public class TestSimpleOneStaysOneMoves extends Test {
                 enter(0),
                 use(),
                 sleep(100),
-                use(),
                 sleep(100),
                 leave()
         };
