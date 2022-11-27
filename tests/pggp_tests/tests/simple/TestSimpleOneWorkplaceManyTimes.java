@@ -10,6 +10,7 @@ public class TestSimpleOneWorkplaceManyTimes extends Test {
         Action[] firstWorkerActions = concat(
                 enter(0),
                 repeat(new Action[]{use(), switchTo(0)}, 100));
+        firstWorkerActions = concat(firstWorkerActions, use());
         firstWorkerActions = concat(firstWorkerActions, leave());
 
         Worker[] workers = {new Worker(1, firstWorkerActions)};

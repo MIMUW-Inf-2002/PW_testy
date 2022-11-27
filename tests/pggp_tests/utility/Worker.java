@@ -31,10 +31,12 @@ public class Worker {
 
             int number_of_work = 0;
             int needToUse = 0;
+            int prev = 0;
             // Doing all actions in the loop.
             for(Action action : this.worker.work) {
                 // We wait some time in the critical section to ensure proper order of the workers.
                 // This function is invoked only if order is checked.
+
                 ensureOrderWait(workshop);
                 action.doWork(workshop, this.worker, workshop.verbose);
                 number_of_work += 1;

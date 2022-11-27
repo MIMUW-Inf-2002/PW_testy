@@ -16,12 +16,14 @@ public class TestSimpleQueueInsideAndUse extends Test {
                 enter(0),
                 use(),
                 switchTo(2),
+                use(),
                 leave()
         };
         Action[] secondWorkerActions = {
                 enter(1),
                 use(),
                 switchTo(2),
+                use(),
                 leave()
         };
 

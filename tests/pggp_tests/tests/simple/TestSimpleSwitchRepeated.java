@@ -14,6 +14,7 @@ public class TestSimpleSwitchRepeated extends Test {
     public boolean run(int verbose) {
         Action[] firstWorkerActions = {
                 enter(0),
+                use(),
                 switchTo(0),
                 use(),
                 switchTo(1),

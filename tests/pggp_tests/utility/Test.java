@@ -54,6 +54,9 @@ public abstract class Test {
     // Worker enters workplace 'begin' and then start rotating
     // 'begin', 'begin + 1', ..., 'last', 'first', 'first + 1', ..., 'last', ...
     public Action[] rotateCycle(int begin, int first, int last, int len) {
+        if(len % 2 == 0) {
+            len += 1; // Zapewniamy parzystość len.
+        }
         Action[] actions = new Action[len];
         actions[0] = enter(begin);
         for (int i = 1; i < len - 2; i += 2) {
