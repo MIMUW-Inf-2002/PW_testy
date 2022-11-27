@@ -8,17 +8,18 @@ import cp2022.tests.kwasow.shared.KwasowWorkplaceId;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 import static cp2022.tests.kwasow.shared.KwasowLogger.log;
 
-public class KwasowBigCycleTest {
+public class KwasowSwitchToSameWorkplaceTest {
 
   public static void run() {
     run(false);
   }
 
   public static void run(boolean verbose) {
-    System.out.println("\nRunning test: " + KwasowBigCycleTest.class.getSimpleName());
+    System.out.println("\nRunning test: " + KwasowSwitchToSameWorkplaceTest.class.getSimpleName());
 
     KwasowWorkplace saw = new KwasowWorkplace(new KwasowWorkplaceId(0), "the saw", verbose);
     KwasowWorkplace hammer = new KwasowWorkplace(new KwasowWorkplaceId(1), "the hammer", verbose);
@@ -30,37 +31,56 @@ public class KwasowBigCycleTest {
     workplaces.add(sink);
 
     Workshop workshop = WorkshopFactory.newWorkshop(workplaces);
-    ArrayList<Thread> threads = new ArrayList<>(4);
+    ArrayList<Thread> threads = new ArrayList<>(3);
 
-    CountDownLatch syncLatch = new CountDownLatch(3);
-
-    Runnable worker = () -> {
+    CountDownLatch thirdShouldWaitUntilFirstExitsAndSecondEnters = new CountDownLatch(3);
+    Runnable worker1 = () -> {
       try {
         Workplace workplace;
         String myName = Thread.currentThread().getName();
 
         log(myName + " tries to enter the workshop and occupy " + saw.getName(), verbose);
         workplace = workshop.enter(saw.getId());
+        thirdShouldWaitUntilFirstExitsAndSecondEnters.countDown();
         log(myName + " now occupies " + saw.getName(), verbose);
         workplace.use();
 
         for (int i = 0; i < 3; i++) {
-          log(myName + " tries to switch its workplace to " + hammer.getName(), verbose);
-          workplace = workshop.switchTo(hammer.getId());
-          log(myName + " now occupies " + hammer.getName(), verbose);
-          workplace.use();
-
-          log(myName + " tries to switch its workplace to " + sink.getName(), verbose);
-          workplace = workshop.switchTo(sink.getId());
-          log(myName + " now occupies " + sink.getName(), verbose);
-          workplace.use();
-
           log(myName + " tries to switch its workplace to " + saw.getName(), verbose);
           workplace = workshop.switchTo(saw.getId());
           log(myName + " now occupies " + saw.getName(), verbose);
           workplace.use();
+        }
 
-          syncLatch.countDown();
+        log(myName + " leaves the workshop", verbose);
+        workshop.leave();
+        thirdShouldWaitUntilFirstExitsAndSecondEnters.countDown();
+      } catch (IllegalStateException e) {
+        for (Thread t : threads) {
+          t.interrupt();
+        }
+
+        e.printStackTrace();
+      }
+    };
+
+    Runnable worker2 = () -> {
+      try {
+        Workplace workplace;
+        String myName = Thread.currentThread().getName();
+
+        log(myName + " tries to enter the workshop and occupy " + hammer.getName(), verbose);
+        workplace = workshop.enter(hammer.getId());
+        log(myName + " now occupies " + hammer.getName(), verbose);
+        workplace.use();
+
+        thirdShouldWaitUntilFirstExitsAndSecondEnters.await();
+
+        for (int i = 0; i < 3; i++) {
+          log(myName + " tries to switch its workplace to " + saw.getName(), verbose);
+          workplace = workshop.switchTo(saw.getId());
+          log(myName + " now occupies " + saw.getName(), verbose);
+          workplace.use();
         }
 
         log(myName + " leaves the workshop", verbose);
@@ -71,31 +91,14 @@ public class KwasowBigCycleTest {
         }
 
         e.printStackTrace();
-      }
-    };
-
-    Runnable seba = () -> {
-      try {
-        // Seba czeka, aż wszystkie miejsca będą zajęte i wszystko się zacykli
-        syncLatch.await();
-        String myName = Thread.currentThread().getName();
-
-        log(myName + " tries to enter the workshop and occupy " + saw.getName(), verbose);
-        Workplace workplace = workshop.enter(saw.getId());
-        log(myName + " now occupies " + saw.getName(), verbose);
-        workplace.use();
-
-        log(myName + " leaves the workshop", verbose);
-        workshop.leave();
       } catch (InterruptedException e) {
-        System.out.println("The " + KwasowBigCycleTest.class.getSimpleName() + " test was interrupted");
+        System.out.println("The " + KwasowSwitchToSameWorkplaceTest.class.getSimpleName() + " test was interrupted");
       }
     };
 
-    threads.add(new Thread(worker, "Brajan"));
-    threads.add(new Thread(worker, "Dżesika"));
-    threads.add(new Thread(worker, "Janusz"));
-    threads.add(new Thread(seba, "Seba"));
+    threads.add(new Thread(worker1, "Brajan"));
+    threads.add(new Thread(worker1, "Dżesika"));
+    threads.add(new Thread(worker2, "Janusz"));
 
     for (Thread t : threads) {
       t.start();
@@ -106,7 +109,7 @@ public class KwasowBigCycleTest {
         t.join();
       }
     } catch (InterruptedException e) {
-      System.out.println("The " + KwasowBigCycleTest.class.getSimpleName() + " test was interrupted");
+      System.out.println("The " + KwasowSwitchToSameWorkplaceTest.class.getSimpleName() + " test was interrupted");
     }
   }
 

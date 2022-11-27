@@ -18,6 +18,15 @@ public class KwasowMain {
     // przeplot, który sprawi, że Seba przyjdzie dopiero, jak cała trójka
     // sobie już pójdzie).
     KwasowBigCycleTest.run(verbose);
+
+    // W tym teście jest jedna osoba, która przesiada się cały czas na swoje
+    // miejsce i druga, która chce na nie wejść z zewnątrz. W końcu ta pierwsza
+    // wychodzi. Druga osoba próbuje się przesiadać cały czas na to samo miejsce,
+    // podczas gdy na inne wchodzi trzecia. Kiedy trzecia osoba kończy pracę na
+    // swoim stanowisku, chce się przesiąść na stanowisko osoby drugiej, ale musi
+    // zaczekać. W końcu osoba druga kończy, osoba trzecia się przesiada, a potem
+    // wychodzi z warsztatu.
+    KwasowSwitchToSameWorkplaceTest.run(verbose);
   }
 
 }
