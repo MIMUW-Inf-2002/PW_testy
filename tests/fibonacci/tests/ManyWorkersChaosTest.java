@@ -1,6 +1,5 @@
 package cp2022.tests.fibonacci.tests;
 
-import cp2022.base.Workplace;
 import cp2022.tests.fibonacci.TestWorkplace;
 import cp2022.tests.fibonacci.TestWorkshop;
 import cp2022.tests.fibonacci.Utility;
@@ -13,7 +12,7 @@ import java.util.Random;
 
 public class ManyWorkersChaosTest extends TestWorkshop {
     @Override
-    protected List<Workplace> workplaces() {
+    protected List<TestWorkplace> workplaces() {
         return Utility.simpleWorkshop(this,20,8);
     }
 

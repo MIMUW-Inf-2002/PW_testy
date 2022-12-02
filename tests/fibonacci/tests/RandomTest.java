@@ -13,8 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomTest extends TestWorkshop {
     @Override
-    protected List<Workplace> workplaces() {
-        List<Workplace> res = new ArrayList<>();
+    protected List<TestWorkplace> workplaces() {
+        List<TestWorkplace> res = new ArrayList<>();
         for(int i=0; i<50; i++) {
             res.add(new TestWorkplace(i,this,1 + ThreadLocalRandom.current().nextInt(10)));
         }

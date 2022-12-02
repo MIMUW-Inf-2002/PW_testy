@@ -27,8 +27,8 @@ public class Utility {
         return res;
     }
 
-    public static List<Workplace> simpleWorkshop(TestWorkshop workshop, int n, int usageTime) {
-        List<Workplace> res = new ArrayList<>();
+    public static List<TestWorkplace> simpleWorkshop(TestWorkshop workshop, int n, int usageTime) {
+        List<TestWorkplace> res = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             res.add(new TestWorkplace(i, workshop, usageTime));
         }

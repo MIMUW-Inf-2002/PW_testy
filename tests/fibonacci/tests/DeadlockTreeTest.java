@@ -1,6 +1,6 @@
 package cp2022.tests.fibonacci.tests;
 
-import cp2022.base.Workplace;
+import cp2022.tests.fibonacci.TestWorkplace;
 import cp2022.tests.fibonacci.TestWorkshop;
 import cp2022.tests.fibonacci.Utility;
 import cp2022.tests.fibonacci.Worker;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DeadlockTreeTest extends TestWorkshop {
     @Override
-    protected List<Workplace> workplaces() {
+    protected List<TestWorkplace> workplaces() {
         return Utility.simpleWorkshop(this, 128, 10);
     }
 

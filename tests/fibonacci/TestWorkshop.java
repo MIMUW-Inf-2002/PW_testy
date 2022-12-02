@@ -1,6 +1,7 @@
 package cp2022.tests.fibonacci;
 
 import cp2022.base.Workplace;
+import cp2022.base.WorkplaceId;
 import cp2022.base.Workshop;
 import cp2022.solution.WorkshopFactory;
 
@@ -21,14 +22,22 @@ public abstract class TestWorkshop {
 
     private final Map<Integer, Map<Long, Integer>> occupation;
 
+    private final Map<Integer, WorkplaceId> workplaceIds;
+
     public TestWorkshop() {
         position = new ConcurrentHashMap<>();
         usage = new ConcurrentHashMap<>();
         occupation = new HashMap<>();
-        internal = WorkshopFactory.newWorkshop(workplaces());
+        workplaceIds = new HashMap<>();
+        List<TestWorkplace> wp = workplaces();
+        wp.forEach((w) ->
+        {
+            workplaceIds.put(w.v, w.getId());
+        });
+        internal = WorkshopFactory.newWorkshop(new ArrayList<>(wp));
     }
 
-    protected abstract List<Workplace> workplaces();
+    protected abstract List<TestWorkplace> workplaces();
 
     protected abstract List<Worker> workers();
 
@@ -64,7 +73,7 @@ public abstract class TestWorkshop {
         if (verbose > 0) {
             System.out.println("Worker " + workerId + " tries to enter the workshop and occupy workplace " + placeId);
         }
-        Workplace res = internal.enter(new WorkplaceIdInt(placeId));
+        Workplace res = internal.enter(getWid(placeId));
 
         if (new WorkplaceIdInt(placeId).compareTo(res.getId()) != 0) {
             throw new RuntimeException("Test failed: worker " + workerId + " received workplace with id " + res.getId() + " but expected workplace with id " + placeId);
@@ -92,7 +101,7 @@ public abstract class TestWorkshop {
         if (verbose > 0) {
             System.out.println("Worker " + workerId + " tries to switch its workplace to workplace " + placeId);
         }
-        Workplace res = internal.switchTo(new WorkplaceIdInt(placeId));
+        Workplace res = internal.switchTo(getWid(placeId));
 
         if (new WorkplaceIdInt(placeId).compareTo(res.getId()) != 0) {
             throw new RuntimeException("Test failed: worker " + workerId + " received workplace with id " + res.getId() + " but expected workplace with id " + placeId);
@@ -157,5 +166,9 @@ public abstract class TestWorkshop {
         if (verbose > 0) {
             System.out.println("Worker " + workerId + " stops using workplace " + placeId);
         }
+    }
+
+    WorkplaceId getWid(int id) {
+        return workplaceIds.get(id);
     }
 }
