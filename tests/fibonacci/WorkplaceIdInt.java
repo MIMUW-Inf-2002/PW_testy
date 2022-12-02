@@ -23,4 +23,13 @@ public class WorkplaceIdInt extends WorkplaceId {
         }
         throw new RuntimeException("panic: different WorkplaceId classes");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof WorkplaceIdInt) {
+            WorkplaceIdInt other = (WorkplaceIdInt) o;
+            return this.v == other.v;
+        }
+        return false;
+    }
 }
