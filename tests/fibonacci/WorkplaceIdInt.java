@@ -32,4 +32,8 @@ public class WorkplaceIdInt extends WorkplaceId {
         }
         return false;
     }
+
+    @Override public int hashCode() {
+        return v ^ 2137;
+    }
 }
