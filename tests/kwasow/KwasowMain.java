@@ -27,6 +27,10 @@ public class KwasowMain {
     // zaczekać. W końcu osoba druga kończy, osoba trzecia się przesiada, a potem
     // wychodzi z warsztatu.
     KwasowSwitchToSameWorkplaceTest.run(verbose);
+    
+    // Ten test sprawdza, czy wszystko działa, jeżeli jest kilka workshopów i czy nie jest
+    // naruszone bezpieczeństwo. Test nie sprawdza współbieżności rozwiązania.
+    KwasowMultipleWorkshopTests.run(verbose);
   }
 
 }
