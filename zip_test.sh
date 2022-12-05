@@ -59,12 +59,30 @@ cp -r ./template/base temp_test/cp2022
 cp -r ./template/demo temp_test/cp2022
 cp -r ./tests temp_test/cp2022
 
-echo "$Compilation"
+echo "Looking for non-ASCII characters"
+
+#!/bin/bash
+
+# Pattern to match non-English characters
+pattern="[\x80-\xFF]"
 
 cd temp_test
+
+# Iterate over all .java files in the current directory
+# and all its subdirectories, except for the ./temp_test/tests/ directory
+for file in $(find . -not -path "./cp2022/tests/*" -type f -name "*.java"); do
+  # Use grep to search for non-English characters in the file
+  # and print the file name and the matching lines
+  # along with two lines of context before and after each match
+  grep --color='auto' -H  -P "[^\x00-\x7F]" $file
+done
+
+
+echo "$Compilation"
+
 find  . -name "*.java" > test_sources.txt
 javac cp2022/base/*.java cp2022/solution/*.java cp2022/demo/*.java @test_sources.txt
-tm test_sources.txt
+rm test_sources.txt
 
 echo "Running demo app."
 

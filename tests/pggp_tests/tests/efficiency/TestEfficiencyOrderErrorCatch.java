@@ -42,8 +42,10 @@ public class TestEfficiencyOrderErrorCatch extends Test {
                 leave()
         };
         Action[] workerB = {
+                enter(2),
                 sleep(1000),
-                enter(1),
+                use(),
+                switchTo(1),
                 use(),
                 sleep(1000),
                 leave()
