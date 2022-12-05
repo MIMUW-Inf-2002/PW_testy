@@ -20,6 +20,10 @@ public class KwasowBigCycleTest {
   public static void run(boolean verbose) {
     System.out.println("\nRunning test: " + KwasowBigCycleTest.class.getSimpleName());
 
+    test(verbose);
+  }
+
+  public static void test(boolean verbose) {
     KwasowWorkplace saw = new KwasowWorkplace(new KwasowWorkplaceId(0), "the saw", verbose);
     KwasowWorkplace hammer = new KwasowWorkplace(new KwasowWorkplaceId(1), "the hammer", verbose);
     KwasowWorkplace sink = new KwasowWorkplace(new KwasowWorkplaceId(2), "the sink", verbose);
