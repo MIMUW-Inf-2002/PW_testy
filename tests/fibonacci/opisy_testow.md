@@ -76,3 +76,8 @@ Test generowany losowo i niedeterministycznie. Dlatego czas może się znacząco
 # AllPermutationsTest
 
 Warsztat o 5 stanowiskach i 120 robotników, każdy porusza się po innej permutacji 5 stanowisk.
+
+# AntiKrzysiekTest
+
+Trzymanie mutexa między enter i use jest nieoptymalne, ten test ma to sprawdzić. Nazwa nie przypadkowa.
+
