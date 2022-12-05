@@ -22,7 +22,8 @@ public class Main{
             new DeadlockTreeTest(),
             new ManyWorkersChaosTest(),
             new RandomTest(),
-            new AllPermutationsTest()
+            new AllPermutationsTest(),
+            new AntiKrzysiekTest()
         );
         System.out.println("\nATTENTION:\nThese tests don't check for starvation! \n");
         for (TestWorkshop test : list) {
