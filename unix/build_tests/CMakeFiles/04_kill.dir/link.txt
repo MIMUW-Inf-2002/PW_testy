@@ -1,0 +1,1 @@
+/usr/bin/cc -g -Wall -Wextra -Wno-sign-compare -rdynamic CMakeFiles/04_kill.dir/tests/simple1/04_kill.c.o -o 04_kill 

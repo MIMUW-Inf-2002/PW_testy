@@ -1,0 +1,30 @@
+Task 0 started: pid 79184.
+Task 1 started: pid 79187.
+Task 2 started: pid 79192.
+Task 3 started: pid 79194.
+Task 4 started: pid 79198.
+Task 5 started: pid 79202.
+Task 6 started: pid 79206.
+Task 7 started: pid 79211.
+Task 8 started: pid 79215.
+Task 9 started: pid 79218.
+Task 0 ended: signalled.
+Task 1 ended: signalled.
+Task 3 ended: signalled.
+Task 4 ended: signalled.
+Task 5 ended: signalled.
+Task 6 ended: signalled.
+Task 7 ended: signalled.
+Task 8 ended: signalled.
+Task 9 ended: signalled.
+Task 2 ended: signalled.
+Task 10 started: pid 79224.
+Task 11 started: pid 79227.
+Task 12 started: pid 79231.
+Task 13 started: pid 79234.
+Task 14 started: pid 79238.
+Task 10 ended: signalled.
+Task 11 ended: signalled.
+Task 12 ended: signalled.
+Task 13 ended: signalled.
+Task 14 ended: signalled.
