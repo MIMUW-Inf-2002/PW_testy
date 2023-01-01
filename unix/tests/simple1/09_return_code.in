@@ -1,0 +1,3 @@
+run ls _this_file_does_not_exists
+sleep 100
+out 0
