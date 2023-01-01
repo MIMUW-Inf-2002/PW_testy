@@ -114,15 +114,16 @@ def test_file(dir_name, test_in_file):
     os.chdir(BUILD_DIR_NAME)
     # Execute the program with input and output redirection
     if VALGRIND:
-        result = subprocess.run(['valgrind', '--error-exitcode=123', '--leak-check=full', '-q', './executor',], 
+        result = subprocess.run(['valgrind', '--error-exitcode=123',  '--tool=helgrind', '-q', './executor',], 
                         stdin=open(input_file_path), 
-                        stdout=subprocess.PIPE)
+                        stdout=subprocess.PIPE
+                        )
         os.chdir("..")
         
         if result.returncode == 0:
-            print("\033[32mVALGRIND OK\033[0m")
+            print("\033[32mHELGRIND OK\033[0m")
         else:
-            print("\033[31mVALGRIND FAILED\033[0m")
+            print("\033[31mHELGRIND FAILED\033[0m")
         
         return
 
