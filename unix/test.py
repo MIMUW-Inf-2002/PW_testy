@@ -1,23 +1,23 @@
 import os
 import subprocess
 import sys
+import argparse
 
-ONE_TEST_FILE = None
-if len(sys.argv) != 2 and len(sys.argv) != 4:
-    print("Use cases:")
-    print("python3 test.py <path/to/src>")
-    print("python3 test.py <path/to/src> <path/to/test/file> N_REPEAT")
-    exit()
-elif len(sys.argv) == 4:
-    ONE_TEST_FILE = os.path.abspath(sys.argv[2])
-    REPEAT = int(sys.argv[3])
-    
+parser = argparse.ArgumentParser(
+                    prog = 'test.py',
+                    description = 'Perform tests for executor task.')
+parser.add_argument('path_to_src', help='path to dir where cmake file is located')
+parser.add_argument('-f', help='path to file with input, if you want to test only one file')  
+parser.add_argument('-n', type=int, help='number of times output comparison tests are executed', default=1)
+parser.add_argument('-vn', type=int, help='number of times valgrind tests are executed', default=1)
+parser.add_argument('-hn', type=int, help='number of times helgrind tests are executed', default=1)
+args = parser.parse_args()
 
-PATH_TO_CMAKE = os.path.abspath(sys.argv[1])
-# FLAGS = '-Wall -Wextra -Werror -O2'.split(' ')
+ONE_TEST_FILE = args.f
+PATH_TO_CMAKE = os.path.abspath(args.path_to_src)
 BUILD_DIR_NAME = 'build_tests'
 TEST_FOLDER_NAME = 'tests'
-VALGRIND = False
+# FLAGS = '-Wall -Wextra -Werror -O2'.split(' ')
 
 # Returns boolean value for tested output.
 # Sections in '======\n' brackets can be in different order. ('\n' is important here)
@@ -113,34 +113,57 @@ def test_file(dir_name, test_in_file):
 
     os.chdir(BUILD_DIR_NAME)
     # Execute the program with input and output redirection
-    if VALGRIND:
-        result = subprocess.run(['valgrind', '--error-exitcode=123',  '--tool=helgrind', '-q', './executor',], 
-                        stdin=open(input_file_path), 
-                        stdout=subprocess.PIPE
-                        )
-        os.chdir("..")
-        
-        if result.returncode == 0:
-            print("\033[32mHELGRIND OK\033[0m")
-        else:
-            print("\033[31mHELGRIND FAILED\033[0m")
-        
+   
+    result = subprocess.run(['./executor'], 
+                    stdin=open(input_file_path), 
+                    stdout=open(output_file_path, "w"))
+    os.chdir("..")
+    if (result.returncode != 0):
+        print(f"Process return code = {result.returncode}")
+        print("\033[31mTEST FAILED\033[0m")
         return
-
-    else:
-        result = subprocess.run(['./executor'], 
-                        stdin=open(input_file_path), 
-                        stdout=open(output_file_path, "w"))
-        os.chdir("..")
-        if (result.returncode != 0):
-            print(f"Process return code = {result.returncode}")
-            print("\033[31mTEST FAILED\033[0m")
-            return
 
     if files_match(output_file_path, f"{TEST_FOLDER_NAME}/{dir_name}/{test_in_file[:-3]}.out"):
         print("\033[32mTEST PASSED\033[0m")
     else:
         print("\033[31mTEST FAILED\033[0m")
+
+# Test file given the name of the test file directory and name of the test input file.
+def helgrind_test_file(dir_name, test_in_file):
+    input_file_path = os.path.abspath(f"{TEST_FOLDER_NAME}/{dir_name}/{test_in_file}")
+    print("Testing file:", f"{TEST_FOLDER_NAME}/{dir_name}/{test_in_file}")
+    os.chdir(BUILD_DIR_NAME)
+    
+    result = subprocess.run(['valgrind', '--error-exitcode=123',  '--tool=helgrind', '-q', './executor',], 
+                        stdin=open(input_file_path), 
+                        stdout=subprocess.PIPE # you can comment this line to print output
+                    )
+    os.chdir("..")
+        
+    if result.returncode == 0:
+        print("\033[32mHELGRIND OK\033[0m")
+        return True
+    else:
+        print("\033[31mHELGRIND FAILED\033[0m")
+        return False
+
+# Test file given the name of the test file directory and name of the test input file.
+def valgrind_test_file(dir_name, test_in_file):
+    input_file_path = os.path.abspath(f"{TEST_FOLDER_NAME}/{dir_name}/{test_in_file}")
+    print("Testing file:", f"{TEST_FOLDER_NAME}/{dir_name}/{test_in_file}")
+    os.chdir(BUILD_DIR_NAME)
+    result = subprocess.run(['valgrind', '--error-exitcode=123', '--leak-check=full', '-q', './executor'], 
+                        stdin=open(input_file_path), 
+                        stdout=subprocess.PIPE # you can comment this line to print output
+                    )
+    os.chdir("..")
+        
+    if result.returncode == 0:
+        print("\033[32mVALGRIND OK\033[0m")
+        return True
+    else:
+        print("\033[31mVALGRIND FAILED\033[0m")
+        return False
 
 def test_for_dir(dir_name):
     build_for_dir(dir_name)
@@ -150,8 +173,23 @@ def test_for_dir(dir_name):
     # Filter the list to only include files ending with ".in"
     in_files = [f for f in files if f.endswith(".in")]
     
-    for test_in_file in sorted(in_files):
-        test_file(dir_name, test_in_file)
+    print("=============== OUTPUT BASED TESTS ===============")
+    print(f"Program outputs are saved to '{BUILD_DIR_NAME}'.\n")
+    for i in range(args.n):
+        for test_in_file in sorted(in_files):
+            test_file(dir_name, test_in_file)
+    
+    print("=============== HELGRIND TESTS ===============")
+    print("They do not compare outputs!\n")
+    for i in range(args.hn):
+        for test_in_file in sorted(in_files):
+            helgrind_test_file(dir_name, test_in_file)
+    
+    print("=============== VALGRIND TESTS ===============")
+    print("They do not compare outputs!\n")
+    for i in range(args.vn):
+        for test_in_file in sorted(in_files):
+            valgrind_test_file(dir_name, test_in_file)
     # remove some files?
 
 
@@ -169,31 +207,21 @@ os.chdir(f"..")
 if ONE_TEST_FILE:
     test_dir_name = os.path.dirname(ONE_TEST_FILE)
     test_dir_name = os.path.basename(test_dir_name)
+    file_name = os.path.basename(ONE_TEST_FILE)
     print(test_dir_name)
     build_for_dir(test_dir_name)
 
-    for i in range(REPEAT):
-        test_file(test_dir_name, os.path.basename(ONE_TEST_FILE))
-    
-    VALGRIND = True
-    test_file(test_dir_name, os.path.basename(ONE_TEST_FILE))
-    
+    for i in range(args.n):
+        test_file(test_dir_name, file_name)
+
+    for i in range(args.hn):
+        helgrind_test_file(test_dir_name, file_name)
+
+    for i in range(args.vn):
+        valgrind_test_file(test_dir_name,file_name)
+
 else:
-    print()
-    print("=============== OUTPUT BASED TESTS ===============")
-    print(f"Program outputs are saved to '{BUILD_DIR_NAME}'.")
-    print()
-
     # Iterate over all the directories in the test directory
-    for entry in sorted(os.scandir(TEST_FOLDER_NAME), key=lambda e: e.name):
-        if entry.is_dir():
-            test_for_dir(entry.name)
-    print()
-    print("=============== VALGRIND TESTS ===============")
-    print("They do not compare outputs!")
-    print()
-
-    VALGRIND = True
     for entry in sorted(os.scandir(TEST_FOLDER_NAME), key=lambda e: e.name):
         if entry.is_dir():
             test_for_dir(entry.name)
