@@ -14,10 +14,10 @@ positional arguments:
 options:
   -h, --help   show this help message and exit
   -f F         path to file with input, if you want to test only one file
-  -n N         number of output comparison tests
-  -vn VN       number of valgrind tests
-  -hn HN       number of helgrind tests
-  ```
+  -n N         number of comparison tests repetitions
+  -vn VN       number of valgrind tests repetitions
+  -hn HN       number of helgrind tests repetitions
+```
 
 Czyli na przykład:
 
@@ -25,8 +25,8 @@ Czyli na przykład:
 
 ```python3 test.py <path/to/src> -f <path/to/test/file>```
 
-Konieczne jest uruchomienie `test.py` z katalogu, w którym on się znajduje. Należy miec na uwadze, że program porównuje wyjścia oraz to, że różne interpetacje zadania mogą powodować różne wyjścia, niepasujące do szablonów (zachęcam do dyskusji). Niezmodyfikowane wyjścia wyrzucone przez executora znajdują się w folderze z buildem, również po zakończeniu programu.
+Konieczne jest uruchomienie `test.py` z katalogu, w którym on się znajduje. Należy miec na uwadze, że program porównuje wyjścia oraz to, że różne interpetacje zadania mogą powodować różne wyjścia, niepasujące do szablonów (zachęcam do dyskusji). Wyjścia wyrzucone przez executora znajdują się w folderze z buildem i nie są usuwane po zakończeniu programu.
 
-Dla twórców testów, testarka najpierw kompiluje wszystkie programy znajdujące się w danym folderze z testami, tak, że można w różnych testach korzystać z różnych programów. Można również odpalić testy pliku .out. Szablony wyjść mają specjalne linijki "=====", pomiędzy nimi wyjście może być w różnej kolejności w stosunku do poprawnego.
+Dla twórców testów, testarka najpierw kompiluje wszystkie programy znajdujące się w danym folderze z testami, tak, że można w różnych testach korzystać z różnych programów. Można również odpalić testy, gdy nie ma pliku .out. Pliki .out zawierają specjalne linijki "=====", pomiędzy nimi wyjście może być w różnej kolejności w stosunku do poprawnego.
 
 Zachęcam do modyfikacji testarki, jak ktoś ma fajny pomysł.
