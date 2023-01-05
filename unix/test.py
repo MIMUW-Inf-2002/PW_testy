@@ -8,9 +8,9 @@ parser = argparse.ArgumentParser(
                     description = 'Perform tests for executor task.')
 parser.add_argument('path_to_src', help='path to dir where cmake file is located')
 parser.add_argument('-f', help='path to file with input, if you want to test only one file')  
-parser.add_argument('-n', type=int, help='number of times output comparison tests are executed', default=1)
-parser.add_argument('-vn', type=int, help='number of times valgrind tests are executed', default=1)
-parser.add_argument('-hn', type=int, help='number of times helgrind tests are executed', default=1)
+parser.add_argument('-n', type=int, help='number of comparison tests repetitions', default=1)
+parser.add_argument('-vn', type=int, help='number of valgrind tests repetitions', default=1)
+parser.add_argument('-hn', type=int, help='number of helgrind tests repetitions', default=1)
 args = parser.parse_args()
 
 ONE_TEST_FILE = args.f
@@ -38,9 +38,11 @@ def files_match(tested_file, schema_file):
         return False
 
     # Remove pid number from every line
-    for i, (tested_line, schema_line) in enumerate(zip(tested_lines, schema_lines)):
+    for i, tested_line in enumerate(tested_lines):
         if ' pid ' in tested_line:
             tested_lines[i] = tested_line.split(' pid ')[0]
+    
+    for i, schema_line in enumerate(schema_lines):
         if ' pid ' in schema_line:
             schema_lines[i] = schema_line.split(' pid ')[0]
 
