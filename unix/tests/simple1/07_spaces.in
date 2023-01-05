@@ -1,4 +1,4 @@
-run ./04_kill
+run ./09_return_code
 
 
 
@@ -10,8 +10,5 @@ err 0
     
 
 
-run ./04_kill
-
-
-       
+run ./09_return_code
 
