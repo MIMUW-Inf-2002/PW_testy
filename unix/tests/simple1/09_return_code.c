@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
     // Check if a command line argument was provided
     if (argc < 2) {
-        usleep(100);
+        usleep(1000000);
         return 0;
     }
 
