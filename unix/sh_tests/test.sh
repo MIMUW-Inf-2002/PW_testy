@@ -1,8 +1,5 @@
 #!/bin/sh
 
-FIFO=./fifo
-! [ -p './fifo' ] && { [ -f './fifo' ] && rm fifo; mkfifo fifo; }
-
 yes_or_no() {
     while true; do
         printf "$* [y/n]: "
@@ -137,6 +134,8 @@ shift "$((OPTIND - 1))"
 
 executor=$(readlink -f "$1")
 cd "$(dirname "$0")"
+FIFO=./fifo
+! [ -p './fifo' ] && { [ -f './fifo' ] && rm fifo; mkfifo fifo; }
 
 [ -x "$executor" ] ||
     { printf "No permissions to run executor...\n"; exit 1; }
