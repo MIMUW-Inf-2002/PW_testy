@@ -25,6 +25,8 @@ Czyli na przykład:
 
 ```python3 test.py <path/to/src> -f <path/to/test/file>```
 
+Konieczne jest uruchomienie `test.py` z katalogu, w którym on się znajduje. Należy miec na uwadze, że program porównuje wyjścia oraz to, że różne interpetacje zadania mogą powodować różne wyjścia, niepasujące do szablonów (zachęcam do dyskusji). Wyjścia wyrzucone przez executora znajdują się w folderze z buildem i nie są usuwane po zakończeniu programu.
+
 Aby uruchomić skrypt `test.sh`, trzeba podać ścieżkę do pliku wykonywalnego:
 ```
 usage: test.sh [-h] [-v] path_to_exe
@@ -41,9 +43,6 @@ Testy:
 1. sprawdza czy proces dziecko ma tylko 3 deskryptory
 2. sprawdza czy program wypisuje komunikaty o zakonczonych procesach podczas wykonywania polecen
 3. Sprawdza czy napotkanie EOF zabija wszystkie procesy
-
-
-Konieczne jest uruchomienie `test.py` z katalogu, w którym on się znajduje. Należy miec na uwadze, że program porównuje wyjścia oraz to, że różne interpetacje zadania mogą powodować różne wyjścia, niepasujące do szablonów (zachęcam do dyskusji). Wyjścia wyrzucone przez executora znajdują się w folderze z buildem i nie są usuwane po zakończeniu programu.
 
 Dla twórców testów, testarka najpierw kompiluje wszystkie programy znajdujące się w danym folderze z testami, tak, że można w różnych testach korzystać z różnych programów. Można również odpalić testy, gdy nie ma pliku .out. Pliki .out zawierają specjalne linijki "=====", pomiędzy nimi wyjście może być w różnej kolejności w stosunku do poprawnego.
 
