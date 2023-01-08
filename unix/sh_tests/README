@@ -1,5 +1,5 @@
 Aby uruchomić skrypt `test.sh`, trzeba podać ścieżkę do pliku wykonywalnego:
-```
+
 usage: test.sh [-h] [-v] path_to_exe
 
 positional arguments:
@@ -8,7 +8,7 @@ positional arguments:
 options:
   -h, --help   show this help message and exit
   -v additional information about tests
-```
+
 
 Testy:
 1. sprawdza czy proces dziecko ma tylko 3 deskryptory
