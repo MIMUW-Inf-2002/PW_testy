@@ -27,6 +27,8 @@ Czyli na przykład:
 
 Konieczne jest uruchomienie `test.py` z katalogu, w którym on się znajduje. Należy miec na uwadze, że program porównuje wyjścia oraz to, że różne interpetacje zadania mogą powodować różne wyjścia, niepasujące do szablonów (zachęcam do dyskusji). Wyjścia wyrzucone przez executora znajdują się w folderze z buildem i nie są usuwane po zakończeniu programu.
 
+# Kontrowersyjne testy
+
 Aby uruchomić skrypt `test.sh`, trzeba podać ścieżkę do pliku wykonywalnego:
 ```
 usage: test.sh [-h] [-v] path_to_exe
