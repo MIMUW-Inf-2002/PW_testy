@@ -154,7 +154,7 @@ def valgrind_test_file(dir_name, test_in_file):
     input_file_path = os.path.abspath(f"{TEST_FOLDER_NAME}/{dir_name}/{test_in_file}")
     print("Testing file:", f"{TEST_FOLDER_NAME}/{dir_name}/{test_in_file}")
     os.chdir(BUILD_DIR_NAME)
-    result = subprocess.run(['valgrind', '--error-exitcode=123', '--leak-check=full', '-q', './executor'], 
+    result = subprocess.run(['valgrind', '--error-exitcode=123', '--leak-check=full', '--track-fds=yes', '-q', './executor'], 
                         stdin=open(input_file_path), 
                         stdout=subprocess.PIPE # you can comment this line to print output
                     )
