@@ -3,7 +3,8 @@
 ## demo.cpp na sterydach
 Na moodle'u jest umieszczony test przykładowy. W repozytorium zostawiam własną wersję
 `demo.cpp` zawierającą prostsze testy i ostatecznie test oryginalny. Mam nadzieję, że
-pomoże to w rozwiązaniu zadania.
+pomoże to w rozwiązaniu zadania. Skrypt działa automatycznie na studentsie, więc niczego
+nie trzeba ustawiać, ale jeżeli ktoś chciałby samemu sobie skompilować:
 
 `demo.cpp`, a także `Makefile` można sobie skopiować do swojego folderu. Kompilacja
 na studentsie może być problematyczna, bo może nie istnieć plik `latch.h` w `/usr`.
@@ -15,4 +16,4 @@ warto zakomentować zmienną `CXX` w `Makefile`.
 
 Aby uruchomić testy, wystarczy przenieść pliki `system.cpp` `system.hpp` do folderu `cpp`
 i uruchomić skrypt, np. poleceniem `./test.sh`. Oczekiwane wyjście jest zapisane w `demo.txt`,
-program był uruchamiany students.
+program był uruchamiany na students.
