@@ -6,4 +6,4 @@ Testy do poszczególnych zadań znajdują się w odpowiadajacych im katalogach.
 | :---------------: | :-----: |
 | **__workshop__**  | `java/` |
 | **__egzekutor__** | `unix/` |
-| **__---------__** | `cpp/`  |
+| **__cyrk__**      | `cpp/`  |
