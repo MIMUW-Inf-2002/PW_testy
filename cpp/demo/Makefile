@@ -13,6 +13,6 @@ main: ${OBJ}
 	${CXX} -c ${CXXFLAGS} $<
 
 clean:
-	rm ${OBJ} system.cpp system.hpp
+	rm ${OBJ}
 
 .PHONY: all main clean
