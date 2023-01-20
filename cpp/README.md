@@ -12,7 +12,7 @@ W folderze `/opt` jest nowszy kompilator, który ma to wszystko, ale żeby wszys
 działało należy ustawić zmienną `$LD_LIBRARY_PATH` na `/opt/gcc-11.1/lib64:/opt/gcc-11.1/lib`,
 za pomocą `export LD_LIBRARY_PATH=[path]` aby wskazać położenie plików `*.so`.
 Szczegóły można sobie zobaczyć w kodzie. Aby uruchomić testy na swoim komputerze
-warto zakomentować zmienną `CXX` w `Makefile`.
+warto zakomentować/ustawić zmienną `CXX` w `Makefile`.
 
 Aby uruchomić testy, wystarczy przenieść pliki `system.cpp` `system.hpp` do folderu `cpp`
 i uruchomić skrypt, np. poleceniem `./test.sh`. Oczekiwane wyjście jest zapisane w `demo.txt`,
