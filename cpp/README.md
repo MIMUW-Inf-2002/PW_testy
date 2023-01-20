@@ -7,7 +7,7 @@ pomoże to w rozwiązaniu zadania. Skrypt działa automatycznie na studentsie, w
 nie trzeba ustawiać, ale jeżeli ktoś chciałby samemu sobie skompilować:
 
 `demo.cpp`, a także `Makefile` można sobie skopiować do swojego folderu. Kompilacja
-na studentsie może być problematyczna, bo może nie istnieć plik `latch.h` w `/usr`.
+na studentsie może być problematyczna, bo może nie istnieć plik `latch` w `/usr`.
 W folderze `/opt` jest nowszy kompilator, który ma to wszystko, ale żeby wszystko
 działało należy ustawić zmienną `$LD_LIBRARY_PATH` na `/opt/gcc-11.1/lib64:/opt/gcc-11.1/lib`,
 za pomocą `export LD_LIBRARY_PATH=[path]` aby wskazać położenie plików `*.so`.
