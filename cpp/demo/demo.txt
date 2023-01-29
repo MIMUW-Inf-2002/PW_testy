@@ -3,7 +3,7 @@
 /opt/gcc-11.1/bin/g++-11.1 -O2 -std=c++20   -c -o demo.o demo.cpp
 /opt/gcc-11.1/bin/g++-11.1 -O2 -std=c++20   -c -o system.o system.cpp
 /opt/gcc-11.1/bin/g++-11.1 -o main demo.o system.o -lpthread
-rm demo.o system.o system.cpp system.hpp
+rm demo.o system.o
 ============== BASIC ==============
 CONSTRUCTOR: GOOD
 ONE WORKER, SIMPLE ORDERS: GOOD
@@ -18,7 +18,7 @@ NOT READY, CLIENT WAS TOO HASTY: caught OrderNotReadyException -> GOOD
 EXPIRED, CLIENT TROLLED YOU: caught OrderExpiredException -> GOOD
 ============== GETTERS ==============
 GET_TIMEOUT: GOOD
-GET_MENU: GOOD
+GET_MENU: caught FulfillmentFailure -> GOOD
 GET_PENDING_ORDERS: (pending count - expected count)
 19-19, 18-18, 17-17, 16-16, 15-15, 14-14, 13-13, 12-12, 11-11, 10-10, 9-9, 8-8, 7-7, 6-6, 5-5, 4-4, 3-3, 2-2, 1-1, 0-0, GOOD
 ============== DEMO ==============
