@@ -4,11 +4,14 @@
 #include <algorithm>
 #include "system.hpp"
 
+#define SECOND 1000
 #define START(string) cout << (string); fflush(stdout)
 #define EXCEPT(string) cout << "caught " << (string) << " -> "; fflush(stdout)
 #define GOOD cout << "GOOD" << endl
-#define BAD cout << "BAD" << endl
-#define SECOND 1000
+#define BAD cout << "BAD" << endl; exit(1)
+#define REPORT(shutdown) auto r = shutdown; \
+if (check_reports && !check_report(r)) \
+    throw BadReportException()
 
 using namespace std;
 
@@ -16,6 +19,85 @@ namespace {
 template <typename T, typename V>
 bool checkType(const V* v) {
     return dynamic_cast<const T*>(v) != nullptr;
+}
+
+class BadReportException: public exception {};
+
+bool check_reports;
+vector<string> fulfilled_orders;
+vector<string> failed_orders;
+vector<string> abandoned_orders;
+bool failed_products; // Only ice_cream machine fails
+
+string
+get_code(vector<string> const & order)
+{
+    string code;
+    int burgers, chips, ice_creams, garbage;
+
+    burgers = chips = ice_creams = garbage = 0;
+    for (string const & product: order) {
+        if (product == "burger")
+            ++burgers;
+        else if (product == "chips")
+            ++chips;
+        else if (product == "iceCream")
+            ++ice_creams;
+        else
+            ++garbage;
+    }
+    code.push_back((char) burgers);
+    code.push_back((char) chips);
+    code.push_back((char) ice_creams);
+    code.push_back((char) garbage);
+
+    return code;
+}
+
+void
+set_expected(vector<vector<string>> const & fulfilled,
+             vector<vector<string>> const & failed,
+             vector<vector<string>> const & abandoned, bool ice_cream)
+{
+    fulfilled_orders.clear();
+    failed_orders.clear();
+    abandoned_orders.clear();
+    for (vector<string> const & order: fulfilled)
+        fulfilled_orders.emplace_back(get_code(order));
+    for (vector<string> const & order: failed)
+        failed_orders.emplace_back(get_code(order));
+    for (vector<string> const & order: abandoned)
+        abandoned_orders.emplace_back(get_code(order));
+    failed_products = ice_cream;
+}
+
+bool
+check_report(vector<WorkerReport> const & reports)
+{
+    vector<string> r1, r2, r3;
+    bool r4 = false; // True, if failed product exists.
+
+    sort(fulfilled_orders.begin(), fulfilled_orders.end());
+    sort(failed_orders.begin(), failed_orders.end());
+    sort(abandoned_orders.begin(), abandoned_orders.end());
+
+    for (WorkerReport const & report: reports) {
+        for (vector<string> const & order: report.collectedOrders)
+            r1.emplace_back(get_code(order));
+        for (vector<string> const & order: report.failedOrders)
+            r2.emplace_back(get_code(order));
+        for (vector<string> const & order: report.abandonedOrders)
+            r3.emplace_back(get_code(order));
+        if (!report.failedProducts.empty())
+            r4 = true;
+    }
+
+    sort(r1.begin(), r1.end());
+    sort(r2.begin(), r2.end());
+    sort(r3.begin(), r3.end());
+
+    return fulfilled_orders == r1 && failed_orders == r2 &&
+        abandoned_orders == r3 && failed_products == r4;
 }
 
 class Burger : public Product {};
@@ -110,21 +192,25 @@ public:
 void
 demo() {
 
+    check_reports = true;
     std::vector<bool> which = {true, true, true, true};
 
     if (which[0]) {
         cout << "============== BASIC ==============" << endl;
         invoke([] {
+            set_expected({}, {}, {}, false);
             START("CONSTRUCTOR: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
              {"chips", shared_ptr<Machine>(new ChipsMachine())}},
             10, 100 * SECOND};
-            system.shutdown();
+            REPORT(system.shutdown());
             GOOD;
         });
         invoke([] {
+            set_expected({{"burger", "burger"},
+                          {"chips", "chips"}}, {}, {}, false);
             START("ONE WORKER, SIMPLE ORDERS: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
@@ -139,10 +225,12 @@ demo() {
             auto o2 = system.collectOrder(std::move(p2));
             assert(checkType<Burger>(o1[0].get()));
             assert(checkType<Chips>(o2[1].get()));
-            system.shutdown();
+            REPORT(system.shutdown());
             GOOD;
         });
         invoke([] {
+            set_expected({vector<string>(15, "burger"),
+                          vector<string>(10, "chips")}, {}, {}, false);
             START("ONE WORKER, BIG ORDERS: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
@@ -157,10 +245,12 @@ demo() {
             auto o2 = system.collectOrder(std::move(p2));
             assert(checkType<Burger>(o1[14].get()));
             assert(checkType<Chips>(o2[9].get()));
-            system.shutdown();
+            REPORT(system.shutdown());
             GOOD;
         });
         invoke([] {
+            set_expected({{"burger", "burger"},
+                          {"chips", "chips"}}, {}, {}, false);
             START("MULTIPLE WORKERS, SIMPLE ORDERS: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
@@ -175,12 +265,15 @@ demo() {
             auto o2 = system.collectOrder(std::move(p2));
             assert(checkType<Burger>(o1[0].get()));
             assert(checkType<Chips>(o2[1].get()));
-            system.shutdown();
+            REPORT(system.shutdown());
             GOOD;
         });
         invoke([] {
-            START("MULTIPLE WORKERS, A LOT OF ORDERS: ");
             int const JOBS = 30;
+            vector<vector<string>> orders(JOBS / 2, {"burger"});
+            orders.insert(orders.end(), JOBS / 2, {"chips"});
+            set_expected(orders, {}, {}, false);
+            START("MULTIPLE WORKERS, A LOT OF ORDERS: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
@@ -206,7 +299,7 @@ demo() {
                 return checkType<t2>(
                         system.collectOrder(std::move(n))[0].get());
             }));
-            system.shutdown();
+            REPORT(system.shutdown());
             GOOD;
         });
     }
@@ -214,14 +307,15 @@ demo() {
     if (which[1]) {
         cout << "============== BASIC EXCEPTIONS ==============" << endl;
         invoke([] {
-            START("ORDERED, BUT RESTAURANT IS CLOSED: ");
             bool flag = false;
+            set_expected({}, {}, {}, false);
+            START("ORDERED, BUT RESTAURANT IS CLOSED: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
              {"chips", shared_ptr<Machine>(new ChipsMachine())}},
              10, 100 * SECOND};
-            system.shutdown();
+            REPORT(system.shutdown());
             try {
                 system.order({"burger", "iceCream"});
             } catch (RestaurantClosedException const & e) {
@@ -231,8 +325,9 @@ demo() {
             if (!flag) BAD;
         });
         invoke([] {
-            START("FAILURE -> NON-EXISTENT PRODUCT -> UNAVAILABLE PRODUCT:\n");
+            set_expected({}, {{"burger", "iceCream"}}, {}, true);
             bool flag[3] = {false, false, false};
+            START("FAILURE -> NON-EXISTENT PRODUCT -> UNAVAILABLE PRODUCT:\n");
             System system{
              {{"burger", shared_ptr<Machine>(new BurgerMachine())},
               {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
@@ -258,33 +353,34 @@ demo() {
                 flag[2] = true;
                 EXCEPT("BadOrderException");
             }
-            system.shutdown();
-            if (flag[0] && flag[1] && flag[2]) GOOD;
-            else BAD;
+            REPORT(system.shutdown());
+            flag[0] && flag[1] && flag[2] ? GOOD : BAD;
         });
 
         invoke([] {
-            START("NOT READY, CLIENT WAS TOO HASTY: ");
+            set_expected({}, {}, {vector<string>(7, "burger")}, false);
             bool flag = false;
+            START("NOT READY, CLIENT WAS TOO HASTY: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
              {"chips", shared_ptr<Machine>(new ChipsMachine())}},
              10, 1 * SECOND};
-            auto p = system.order(std::vector<std::string>(7, "burger"));
+            auto p = system.order(vector<string>(7, "burger"));
             try {
                 system.collectOrder(std::move(p));
             } catch (OrderNotReadyException const & e) {
                 flag = true;
-                EXCEPT("OrderNotReadyException"); GOOD;
+                EXCEPT("OrderNotReadyException");
             }
-            if (!flag) BAD;
-            system.shutdown();
+            REPORT(system.shutdown());
+            flag ? GOOD : BAD;
         });
 
         invoke([] {
-            START("EXPIRED, CLIENT TROLLED YOU: ");
+            set_expected({}, {}, {{"burger"}}, false);
             bool flag = false;
+            START("EXPIRED, CLIENT TROLLED YOU: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
@@ -299,25 +395,27 @@ demo() {
                 flag = true;
                 EXCEPT("OrderExpiredException"); GOOD;
             }
-            if (!flag) BAD;
-            system.shutdown();
+            REPORT(system.shutdown());
+            flag ? GOOD : BAD;
         });
     }
 
     if (which[2]) {
         cout << "============== GETTERS ==============" << endl;
         invoke([] {
+            set_expected({}, {}, {}, false);
             START("GET_TIMEOUT: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
              {"chips", shared_ptr<Machine>(new ChipsMachine())}},
             10, 100 * SECOND};
-            system.shutdown();
+            REPORT(system.shutdown());
             assert(system.getClientTimeout() == 100 * SECOND);
             GOOD;
         });
         invoke([] {
+            set_expected({}, {{"iceCream"}}, {}, true);
             START("GET_MENU: ");
             System system {
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
@@ -338,6 +436,8 @@ demo() {
             flag ? GOOD : BAD;
         });
         invoke([] {
+            uint i = 20;
+            set_expected({i, {"burger"}}, {}, {}, false);
             START("GET_PENDING_ORDERS: (pending count - expected count)\n");
             System system {
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
@@ -351,7 +451,6 @@ demo() {
                 return vector;
             };
 
-            int i = 20;
             auto p = flood("burger", i);
             assert(system.getPendingOrders().size() == i);
             assert(ranges::all_of(p.begin(), p.end(), [&system, &i](auto &n) {
@@ -362,7 +461,7 @@ demo() {
                 fflush(stdout);
                 return size == i;
             }));
-            system.shutdown();
+            REPORT(system.shutdown());
             GOOD;
         });
     }
