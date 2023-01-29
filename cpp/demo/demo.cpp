@@ -8,6 +8,7 @@
 #define EXCEPT(string) cout << "caught " << (string) << " -> "; fflush(stdout)
 #define GOOD cout << "GOOD" << endl
 #define BAD cout << "BAD" << endl
+#define SECOND 1000
 
 using namespace std;
 
@@ -106,7 +107,9 @@ public:
 };
 }
 
-void demo() {
+void
+demo() {
+
     std::vector<bool> which = {true, true, true, true};
 
     if (which[0]) {
@@ -116,18 +119,18 @@ void demo() {
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-             {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10,
-            100};
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+            10, 100 * SECOND};
             system.shutdown();
             GOOD;
         });
         invoke([] {
             START("ONE WORKER, SIMPLE ORDERS: ");
             System system{
-                    {{"burger", shared_ptr<Machine>(new BurgerMachine())},
-                     {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-                     {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 1,
-                    100};
+            {{"burger", shared_ptr<Machine>(new BurgerMachine())},
+             {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+             1, 100 * SECOND};
             auto p1 = system.order({"burger", "burger"});
             p1->wait();
             auto o1 = system.collectOrder(std::move(p1));
@@ -142,10 +145,10 @@ void demo() {
         invoke([] {
             START("ONE WORKER, BIG ORDERS: ");
             System system{
-                    {{"burger", shared_ptr<Machine>(new BurgerMachine())},
-                     {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-                     {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 1,
-                    100};
+            {{"burger", shared_ptr<Machine>(new BurgerMachine())},
+             {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+             1, 100 * SECOND};
             auto p1 = system.order(vector<string>(15, "burger"));
             auto p2 = system.order(vector<string>(10, "chips"));
             p1->wait();
@@ -160,10 +163,10 @@ void demo() {
         invoke([] {
             START("MULTIPLE WORKERS, SIMPLE ORDERS: ");
             System system{
-                    {{"burger", shared_ptr<Machine>(new BurgerMachine())},
-                     {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-                     {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10,
-                    100};
+            {{"burger", shared_ptr<Machine>(new BurgerMachine())},
+             {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+            10, 100 * SECOND};
             auto p1 = system.order({"burger", "burger"});
             p1->wait();
             auto o1 = system.collectOrder(std::move(p1));
@@ -179,10 +182,10 @@ void demo() {
             START("MULTIPLE WORKERS, A LOT OF ORDERS: ");
             int const JOBS = 30;
             System system{
-                    {{"burger", shared_ptr<Machine>(new BurgerMachine())},
-                     {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-                     {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10,
-                    100};
+            {{"burger", shared_ptr<Machine>(new BurgerMachine())},
+             {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+            10, 100 * SECOND};
             auto const flood = [&system](string const &name, uint count) {
                 vector<unique_ptr<CoasterPager>> vector;
                 for (uint i = 0; i < count; ++i)
@@ -214,10 +217,10 @@ void demo() {
             START("ORDERED, BUT RESTAURANT IS CLOSED: ");
             bool flag = false;
             System system{
-                    {{"burger", shared_ptr<Machine>(new BurgerMachine())},
-                     {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-                     {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10,
-                    100};
+            {{"burger", shared_ptr<Machine>(new BurgerMachine())},
+             {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+             10, 100 * SECOND};
             system.shutdown();
             try {
                 system.order({"burger", "iceCream"});
@@ -231,10 +234,10 @@ void demo() {
             START("FAILURE -> NON-EXISTENT PRODUCT -> UNAVAILABLE PRODUCT:\n");
             bool flag[3] = {false, false, false};
             System system{
-                    {{"burger", shared_ptr<Machine>(new BurgerMachine())},
-                     {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-                     {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10,
-                    100};
+             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
+              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
+              {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+             10, 100 * SECOND};
             auto pager = system.order({"burger", "iceCream"});
             try {
                 pager->wait();
@@ -266,7 +269,8 @@ void demo() {
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-             {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10, 1};
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+             10, 1 * SECOND};
             auto p = system.order(std::vector<std::string>(7, "burger"));
             try {
                 system.collectOrder(std::move(p));
@@ -282,10 +286,10 @@ void demo() {
             START("EXPIRED, CLIENT TROLLED YOU: ");
             bool flag = false;
             System system{
-                    {{"burger", shared_ptr<Machine>(new BurgerMachine())},
-                     {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-                     {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10,
-                    1};
+            {{"burger", shared_ptr<Machine>(new BurgerMachine())},
+             {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+            10, 1 * SECOND};
             auto p = system.order({"burger"});
             p->wait();
             this_thread::sleep_for(chrono::seconds(2));
@@ -307,9 +311,10 @@ void demo() {
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-             {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10, 100};
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+            10, 100 * SECOND};
             system.shutdown();
-            assert(system.getClientTimeout() == 100);
+            assert(system.getClientTimeout() == 100 * SECOND);
             GOOD;
         });
         invoke([] {
@@ -317,22 +322,28 @@ void demo() {
             System system {
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-             {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10, 100};
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+            10, 100 * SECOND};
+            bool flag = false;
             auto menu = system.getMenu();
             assert(menu.size() == 3);
             auto pager = system.order({"iceCream"});
-            pager->wait();
+            try { pager->wait(); } catch (FulfillmentFailure const & e) {
+                EXCEPT("FulfillmentFailure");
+                flag = true;
+            }
             menu = system.getMenu();
             assert(menu.size() == 2);
             system.shutdown();
-            GOOD;
+            flag ? GOOD : BAD;
         });
         invoke([] {
             START("GET_PENDING_ORDERS: (pending count - expected count)\n");
             System system {
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-             {"chips", shared_ptr<Machine>(new ChipsMachine())}}, 10, 100};
+             {"chips", shared_ptr<Machine>(new ChipsMachine())}},
+            10, 100 * SECOND};
             auto const flood = [&system](string const &name, uint count) {
                 vector<unique_ptr<CoasterPager>> vector;
                 for (uint i = 0; i < count; ++i)
@@ -408,7 +419,9 @@ void demo() {
     }
 }
 
-int main() {
+int
+main()
+{
     demo();
     return 0;
 }
