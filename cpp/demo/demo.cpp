@@ -5,10 +5,10 @@
 #include "system.hpp"
 
 #define SECOND 1000
-#define START(string) cout << (string); fflush(stdout)
-#define EXCEPT(string) cout << "caught " << (string) << " -> "; fflush(stdout)
-#define GOOD cout << "GOOD" << endl
-#define BAD cout << "BAD" << endl; exit(1)
+#define START(string) cerr << (string)
+#define EXCEPT(string) cerr << "caught " << (string) << " -> "
+#define GOOD cerr << "GOOD" << endl
+#define BAD cerr << "BAD" << endl; exit(1)
 #define REPORT(shutdown) auto r = shutdown; \
 if (check_reports && !check_report(r)) \
     throw BadReportException()
@@ -96,6 +96,7 @@ check_report(vector<WorkerReport> const & reports)
     sort(r2.begin(), r2.end());
     sort(r3.begin(), r3.end());
 
+    // Breakpoint here if you have problems with reports.
     return fulfilled_orders == r1 && failed_orders == r2 &&
         abandoned_orders == r3 && failed_products == r4;
 }
@@ -196,7 +197,7 @@ demo() {
     std::vector<bool> which = {true, true, true, true};
 
     if (which[0]) {
-        cout << "============== BASIC ==============" << endl;
+        cout << "Demo Tests 1/4 - Basic (takes 17 seconds)" << endl;
         invoke([] {
             set_expected({}, {}, {}, false);
             START("CONSTRUCTOR: ");
@@ -301,11 +302,12 @@ demo() {
             }));
             REPORT(system.shutdown());
             GOOD;
+            cerr << '\n';
         });
     }
 
     if (which[1]) {
-        cout << "============== BASIC EXCEPTIONS ==============" << endl;
+        cout << "Demo Tests 2/4 - Exceptions (takes 7 seconds)" << endl;
         invoke([] {
             bool flag = false;
             set_expected({}, {}, {}, false);
@@ -320,9 +322,10 @@ demo() {
                 system.order({"burger", "iceCream"});
             } catch (RestaurantClosedException const & e) {
                 flag = true;
-                EXCEPT("RestaurantClosedException"); GOOD;
+                EXCEPT("RestaurantClosedException");
             }
-            if (!flag) BAD;
+            if (!flag) { BAD; }
+            GOOD;
         });
         invoke([] {
             set_expected({}, {{"burger", "iceCream"}}, {}, true);
@@ -354,7 +357,8 @@ demo() {
                 EXCEPT("BadOrderException");
             }
             REPORT(system.shutdown());
-            flag[0] && flag[1] && flag[2] ? GOOD : BAD;
+            if (!flag[0] || !flag[1] || !flag[2]) { BAD; }
+            GOOD;
         });
 
         invoke([] {
@@ -374,7 +378,8 @@ demo() {
                 EXCEPT("OrderNotReadyException");
             }
             REPORT(system.shutdown());
-            flag ? GOOD : BAD;
+            if (!flag) { BAD; }
+            GOOD;
         });
 
         invoke([] {
@@ -393,16 +398,18 @@ demo() {
                 system.collectOrder(std::move(p));
             } catch (OrderExpiredException const & e) {
                 flag = true;
-                EXCEPT("OrderExpiredException"); GOOD;
+                EXCEPT("OrderExpiredException");
             }
             REPORT(system.shutdown());
-            flag ? GOOD : BAD;
+            if (!flag) { BAD; }
+            GOOD;
         });
+        cerr << '\n';
     }
 
     if (which[2]) {
-        cout << "============== GETTERS ==============" << endl;
         invoke([] {
+            cout << "Demo Tests 3/4 - Getters (takes 13 seconds)" << endl;
             set_expected({}, {}, {}, false);
             START("GET_TIMEOUT: ");
             System system{
@@ -433,7 +440,8 @@ demo() {
             menu = system.getMenu();
             assert(menu.size() == 2);
             system.shutdown();
-            flag ? GOOD : BAD;
+            if (!flag) { BAD; }
+            GOOD;
         });
         invoke([] {
             uint i = 20;
@@ -457,18 +465,20 @@ demo() {
                 n->wait();
                 system.collectOrder(std::move(n));
                 uint size = system.getPendingOrders().size();
-                cout << size << "-" << --i << ", ";
+                cerr << size << "-" << --i << ", ";
                 fflush(stdout);
                 return size == i;
             }));
             REPORT(system.shutdown());
             GOOD;
         });
+        cerr << '\n';
     }
 
     if (which[3]) {
-        cout << "============== DEMO ==============" << endl;
+        cout << "Demo Tests 4/4 - Original (takes 2 seconds)" << endl;
         std::invoke([] {
+            START("DEMO: ");
             System system {
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
@@ -483,7 +493,7 @@ demo() {
                 p->wait();
                 system.collectOrder(std::move(p));
                 shutdown_latch.count_down();
-                std::cout << "OK\n";
+                START("OK ");
             });
             auto client2 = std::jthread([&system, &latch, &shutdown_latch](){
                 latch.wait();
@@ -494,7 +504,7 @@ demo() {
                     p->wait();
                     system.collectOrder(std::move(p));
                 } catch (const FulfillmentFailure& e) {
-                    std::cout << "OK\n";
+                    START("OK ");
                 }
                 shutdown_latch.count_down();
             });
@@ -507,7 +517,7 @@ demo() {
                     p->wait();
                     system.collectOrder(std::move(p));
                 } catch (const RestaurantClosedException& e) {
-                    std::cout << "OK\n";
+                    START("OK\n");
                 }
             });
             latch.count_down();
