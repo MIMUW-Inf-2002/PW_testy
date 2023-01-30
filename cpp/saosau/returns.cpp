@@ -2,10 +2,10 @@
 #include <cassert>
 #include "system.hpp"
 
-#define START(string) cout << (string); fflush(stdout)
+#define START(string) cerr << (string)
 #define EXCEPT(string) cerr << "caught " << (string) << " -> "
-#define GOOD cout << "GOOD" << endl
-#define BAD cout << "BAD" << endl; exit(1)
+#define GOOD cerr << "GOOD" << endl
+#define BAD cerr << "BAD" << endl; exit(1)
 
 using namespace std;
 
@@ -147,6 +147,8 @@ void returns_on_timeout() {
 }
 namespace saosau {
 void test() {
+    cerr << '\n';
+    cout << "Returns Tests (takes less than 3 seconds)" << endl;
     returns_on_failure();
     returns_on_timeout();
 }
