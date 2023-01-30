@@ -19,7 +19,8 @@ i uruchomić skrypt, np. poleceniem `./test.sh`. Oczekiwane wyjście jest zapisa
 program był uruchamiany na students.
 
 ## testy
-Tutaj już wystarczy skompilować kod przez `make`, a potem wpisać `./main`, ewentualnie
+Pliki zostawiamy tak jak powyżej, ale tutaj już wystarczy skompilować kod przez `make`,
+a potem wpisać `./main`, ewentualnie
 `LD_LIBRARY_PATH=/opt/gcc-11.1/lib64 ./main`. Można też `./main 2>/dev/null`.
 Oczekiwane wyjście jest zapisane w `main.txt`.
 
