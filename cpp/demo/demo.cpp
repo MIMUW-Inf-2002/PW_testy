@@ -23,7 +23,6 @@ bool checkType(const V* v) {
 
 class BadReportException: public exception {};
 
-bool check_reports;
 vector<string> fulfilled_orders;
 vector<string> failed_orders;
 vector<string> abandoned_orders;
@@ -193,11 +192,11 @@ public:
 void
 demo() {
 
-    check_reports = false;
+    bool const check_reports = true;
     std::vector<bool> which = {true, true, true, true};
 
     if (which[0]) {
-        cout << "Demo Tests 1/4 - Basic (takes 17 seconds)" << endl;
+        cout << "Demo Tests 1/4 - Basic (takes 11 seconds)" << endl;
         invoke([] {
             set_expected({}, {}, {}, false);
             START("CONSTRUCTOR: ");
@@ -230,7 +229,7 @@ demo() {
             GOOD;
         });
         invoke([] {
-            set_expected({vector<string>(15, "burger"),
+            set_expected({vector<string>(12, "burger"),
                           vector<string>(10, "chips")}, {}, {}, false);
             START("ONE WORKER, BIG ORDERS: ");
             System system{
@@ -238,13 +237,13 @@ demo() {
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
              {"chips", shared_ptr<Machine>(new ChipsMachine())}},
              1, 100 * SECOND};
-            auto p1 = system.order(vector<string>(15, "burger"));
+            auto p1 = system.order(vector<string>(12, "burger"));
             auto p2 = system.order(vector<string>(10, "chips"));
             p1->wait();
             auto o1 = system.collectOrder(std::move(p1));
             p2->wait();
             auto o2 = system.collectOrder(std::move(p2));
-            assert(checkType<Burger>(o1[14].get()));
+            assert(checkType<Burger>(o1[11].get()));
             assert(checkType<Chips>(o2[9].get()));
             REPORT(system.shutdown());
             GOOD;
@@ -270,7 +269,7 @@ demo() {
             GOOD;
         });
         invoke([] {
-            int const JOBS = 30;
+            int const JOBS = 24;
             vector<vector<string>> orders(JOBS / 2, {"burger"});
             orders.insert(orders.end(), JOBS / 2, {"chips"});
             set_expected(orders, {}, {}, false);
@@ -409,7 +408,7 @@ demo() {
 
     if (which[2]) {
         invoke([] {
-            cout << "Demo Tests 3/4 - Getters (takes 13 seconds)" << endl;
+            cout << "Demo Tests 3/4 - Getters (takes 6 seconds)" << endl;
             set_expected({}, {}, {}, false);
             START("GET_TIMEOUT: ");
             System system{
@@ -430,21 +429,20 @@ demo() {
              {"chips", shared_ptr<Machine>(new ChipsMachine())}},
             10, 100 * SECOND};
             bool flag = false;
-            auto menu = system.getMenu();
-            assert(menu.size() == 3);
+            assert(system.getMenu().size() == 3);
             auto pager = system.order({"iceCream"});
             try { pager->wait(); } catch (FulfillmentFailure const & e) {
                 EXCEPT("FulfillmentFailure");
                 flag = true;
             }
-            menu = system.getMenu();
-            assert(menu.size() == 2);
+            assert(system.getMenu().size() == 2);
             system.shutdown();
+            assert(system.getMenu().empty());
             if (!flag) { BAD; }
             GOOD;
         });
         invoke([] {
-            uint i = 20;
+            uint i = 13;
             set_expected({i, {"burger"}}, {}, {}, false);
             START("GET_PENDING_ORDERS: (pending count - expected count)\n");
             System system {
