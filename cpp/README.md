@@ -14,7 +14,7 @@ za pomocą `export LD_LIBRARY_PATH=[path]` aby wskazać położenie plików `*.s
 Szczegóły można sobie zobaczyć w kodzie. Aby uruchomić testy na swoim komputerze
 warto zakomentować/ustawić zmienną `CXX` w `Makefile`.
 
-Aby uruchomić `demo.cpp`, wystarczy przenieść pliki `system.cpp` `system.hpp` do folderu `cpp`
+Aby uruchomić testy demo, wystarczy przenieść pliki `system.cpp` `system.hpp` do folderu `cpp`
 i uruchomić skrypt, np. poleceniem `./test.sh`. Oczekiwane wyjście jest zapisane w `demo.txt`,
 program był uruchamiany na students.
 
