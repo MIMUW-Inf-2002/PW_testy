@@ -1,6 +1,6 @@
-#ifndef RETURNS_H
-#define RETURNS_H
+#ifndef SAOSAU_RETURNS_H
+#define SAOSAU_RETURNS_H
 namespace saosau {
-    void test();
+    void returns_test();
 }
 #endif

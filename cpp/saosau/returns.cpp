@@ -73,43 +73,61 @@ public:
     void stop() override {}
 };
 
+// There's only one apple pie. Lucky!
 class ApplePieMachine : public Machine {
+bool taken;
 public:
+    bool returned;
+    ApplePieMachine(): taken(), returned() {}
     unique_ptr<Product> getProduct() override {
-        this_thread::sleep_for(chrono::seconds(2));
-        throw MachineFailure();
+        !taken ? taken = true : throw MachineFailure();
+        return make_unique<ApplePie>();
     }
     void returnProduct(unique_ptr<Product> product) override {
         if (!checkType<ApplePie>(product.get())) throw BadProductException();
+        returned = true;
     }
     void start() override {}
     void stop() override {}
 };
 
+auto flood(System & system, auto const & order, uint count) {
+    vector<unique_ptr<CoasterPager>> pagers;
+    for (uint i = 0; i < count; ++i)
+        try {
+            pagers.emplace_back(system.order(order));
+        } catch (BadOrderException const &) { EXCEPT("BadOrderException"); }
+    return pagers;
+}
+
 void returns_on_failure() {
     START("WORKERS RETURN ON FAILURE: ");
+    auto apple_pie_machine = make_shared<ApplePieMachine>();
     System system{
     {{"springRoll", shared_ptr<Machine>(new SpringRollMachine())},
      {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
-     {"applePie", shared_ptr<Machine>(new ApplePieMachine())}},
-    10, 100};
-    vector<string> failed1(50, "springRoll");
+     {"applePie", apple_pie_machine}}, 10, 100};
+    vector<string> failed1(20, "springRoll");
     failed1.emplace_back("iceCream");
-    vector<string> failed2(50, "springRoll");
-    failed1.emplace_back("applePie");
-    auto p1 = system.order(failed1);
-    auto p2 = system.order(failed1);
+    vector<string> failed2(20, "springRoll");
+    failed2.emplace_back("applePie");
+    failed2.emplace_back("applePie");
+    auto p1 = flood(system, failed1, 5);
+    auto p2 = flood(system, failed2, 5);
     auto p3 = system.order(vector<string>(100, "springRoll"));
-    try { p1->wait(); } catch (FulfillmentFailure const & e) {
-        EXCEPT("FulfillmentFailure");
-    }
-    try { p2->wait(); } catch (FulfillmentFailure const & e) {
-        EXCEPT("FulfillmentFailure");
-    }
+    for (auto & p: p1)
+        try { p->wait(); } catch (FulfillmentFailure const &e) {
+            EXCEPT("FulfillmentFailure");
+        }
+    for (auto & p: p2)
+        try { p->wait(); } catch (FulfillmentFailure const &e) {
+            EXCEPT("FulfillmentFailure");
+        }
     p3->wait();
     auto spring_rolls = system.collectOrder(std::move(p3));
     system.shutdown();
     assert(checkType<SpringRoll>(spring_rolls[99].get()));
+    assert(apple_pie_machine->returned);
     GOOD;
 }
 
@@ -120,23 +138,16 @@ void returns_on_timeout() {
      {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},
      {"applePie", shared_ptr<Machine>(new ApplePieMachine())}},
     10, 100};
-    vector<string> failed1(50, "springRoll");
-    vector<string> failed2(50, "springRoll");
-    auto p1 = system.order(failed1);
-    auto p2 = system.order(failed1);
-    p1->wait();
-    p2->wait();
+    auto pagers = flood(system, vector<string>(20, "springRoll"), 10);
+    for (auto & p: pagers)
+        p->wait();
     this_thread::sleep_for(chrono::seconds(1));
-    try {
-        system.collectOrder(std::move(p1));
-    } catch (OrderExpiredException const & e) {
-        EXCEPT("OrderExpiredException");
-    }
-    try {
-        system.collectOrder(std::move(p2));
-    } catch (OrderExpiredException const & e) {
-        EXCEPT("OrderExpiredException");
-    }
+    for (auto & p: pagers)
+        try {
+            system.collectOrder(std::move(p));
+        } catch (OrderExpiredException const & e) {
+            EXCEPT("OrderExpiredException");
+        }
     auto p3 = system.order(vector<string>(100, "springRoll"));
     p3->wait();
     auto spring_rolls = system.collectOrder(std::move(p3));
@@ -146,9 +157,9 @@ void returns_on_timeout() {
 }
 }
 namespace saosau {
-void test() {
+void returns_test() {
     cerr << '\n';
-    cout << "Returns Tests (takes less than 3 seconds)" << endl;
+    cout << "Returns Tests (takes 3 seconds)" << endl;
     returns_on_failure();
     returns_on_timeout();
 }
