@@ -33,7 +33,9 @@ Treść raportów jest sprawdzana przy Demo i Performance testach. Można tymcza
 Sprawdza, czy rzeczywiście zwracane są wszystkie produkty. Zamawianych
 sajgonek jest o wiele więcej niż przygotowana ilość, ale poprawne zamówienia nie wykraczają
 poza ten limit, dlatego ważne jest, żeby sajgonki docierały w kolejności zamówień. Dodatkowo,
-sajgonek jest dokładnie 100, dlatego nie można zmarnować ani jednej sajgonki.
+sajgonek jest dokładnie 100, dlatego nie można zmarnować ani jednej sajgonki. W drugim teście
+jest duża szansa, że pracownicy spróbują pobrać/zwrócić produkt w tym samym czasie, wtedy
+maszyna rzuca wyjątek BadGetProductException/BadReturnProductException.
 
 - Performance Tests
 
