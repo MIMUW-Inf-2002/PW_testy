@@ -9,8 +9,7 @@
 #define EXCEPT(string) cerr << "caught " << (string) << " -> "
 #define GOOD cerr << "GOOD" << endl
 #define BAD cerr << "BAD" << endl; exit(1)
-#define REPORT(shutdown) auto r = shutdown; \
-if (!check_report(r) && check_reports) \
+#define REPORT(shutdown) if (!check_report(shutdown) && check_reports) \
     throw BadReportException()
 
 using namespace std;
