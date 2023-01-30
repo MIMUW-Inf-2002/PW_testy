@@ -105,7 +105,7 @@ class Burger : public Product {};
 class IceCream : public Product {};
 class Chips : public Product {};
 class BurgerMachine : public Machine {
-    size_t burgersMade;
+    std::atomic<size_t> burgersMade;
     chrono::seconds time = chrono::seconds(1);
 public:
     BurgerMachine() : burgersMade(0) {}
@@ -526,11 +526,4 @@ demo() {
             bad_latch.count_down();
         });
     }
-}
-
-int
-main()
-{
-    demo();
-    return 0;
 }

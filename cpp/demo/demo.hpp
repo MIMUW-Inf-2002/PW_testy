@@ -1,4 +1,4 @@
 #ifndef DEMO_HPP
-#define
+#define DEMO_HPP
 void demo();
 #endif
