@@ -19,9 +19,28 @@ i uruchomić skrypt, np. poleceniem `./test.sh`. Oczekiwane wyjście jest zapisa
 program był uruchamiany na students.
 
 ## testy
-Pliki zostawiamy tak jak powyżej, ale tutaj już wystarczy skompilować kod przez `make`,
-a potem wpisać `./main`, ewentualnie
+Pliki zostawiamy tak jak powyżej, ale tutaj już wystarczy skompilować kod przez `make -j15`
+(`-j15` na studentsie), a potem wpisać `./main`, ewentualnie
 `LD_LIBRARY_PATH=/opt/gcc-11.1/lib64 ./main`. Można też `./main 2>/dev/null`.
-Oczekiwane wyjście jest zapisane w `main.txt`.
+Oczekiwane wyjście jest zapisane w `expected.txt`.
 
-- Returns Tests - Sprawdza, czy rzeczywiście zwracane są wszystkie produkty.
+- Raporty
+
+Treść raportów jest sprawdzana przy Demo i Performance testach. Można tymczasowo wyłączyć funkcjonalność.
+
+- Returns Tests
+
+Sprawdza, czy rzeczywiście zwracane są wszystkie produkty. Zamawianych
+sajgonek jest o wiele więcej niż przygotowana ilość, ale poprawne zamówienia nie wykraczają
+poza ten limit, dlatego ważne jest, żeby sajgonki docierały w kolejności zamówień. Dodatkowo,
+sajgonek jest dokładnie 100, dlatego nie można zmarnować ani jednej sajgonki.
+
+- Performance Tests
+
+Pierwsze zamówienie jest ogromne, ale błędne. Test informuje o tym, czy system od razu rezygnuje z
+wykonania zamówienia po błędzie.
+
+- Concurrent Tests
+
+Mamy 5 klientów, którzy korzystają z systemu naraz zamiawiając szczególne produkty. Piąta osoba próbuje
+narobić zamieszania wywołując resztę metod i składając puste zamówienia.
