@@ -6,7 +6,7 @@ SRC += ${addprefix saosau/, returns.cpp performance.cpp concurrent.cpp}
 OBJ = ${SRC:.cpp=.o}
 #OBJ = ${SRC_T:.cc=.o}
 CXX = /opt/gcc-11.1/bin/g++-11.1
-CXXFLAGS = -g -O2 -std=c++20 -I${PWD}
+CXXFLAGS = -O2 -std=c++20 -Wall -Wextra -Werror -I${PWD}
 LDFLAGS = -lpthread
 
 all: main
