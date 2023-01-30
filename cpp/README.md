@@ -17,3 +17,10 @@ warto zakomentować/ustawić zmienną `CXX` w `Makefile`.
 Aby uruchomić testy, wystarczy przenieść pliki `system.cpp` `system.hpp` do folderu `cpp`
 i uruchomić skrypt, np. poleceniem `./test.sh`. Oczekiwane wyjście jest zapisane w `demo.txt`,
 program był uruchamiany na students.
+
+## testy
+Tutaj już wystarczy skompilować kod przez `make`, a potem wpisać `./main`, ewentualnie
+`LD_LIBRARY_PATH=/opt/gcc-11.1/lib64 ./main`. Można też `./main 2>&1`.
+Oczekiwane wyjście jest zapisane w `main.txt`.
+
+- Returns Tests - Sprawdza, czy rzeczywiście zwracane są wszystkie produkty.
