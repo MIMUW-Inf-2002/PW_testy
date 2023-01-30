@@ -383,7 +383,7 @@ demo() {
         invoke([] {
             set_expected({}, {}, {{"burger"}}, false);
             bool flag = false;
-            START("EXPIRED, CLIENT TROLLED YOU: ");
+            START("EXPIRED, CLIENT FALTERED: ");
             System system{
             {{"burger", shared_ptr<Machine>(new BurgerMachine())},
              {"iceCream", shared_ptr<Machine>(new IceCreamMachine())},

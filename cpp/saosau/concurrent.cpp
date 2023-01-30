@@ -157,7 +157,7 @@ namespace saosau {
         printf("\33[2K\r");
         fflush(stdout);
         START("CONCURRENT: ");
-        EXCEPT("IncompetentFoolException " + to_string(count) + " times");
+        EXCEPT("exception " + to_string(count) + " times");
         system.shutdown();
         if (count != 200) { BAD; }
         GOOD;
