@@ -15,6 +15,9 @@ bool checkType(const V *v) {
     return dynamic_cast<const T *>(v) != nullptr;
 }
 
+class UnsafeGetProductException: public std::exception {};
+class UnsafeReturnProductException: public std::exception {};
+
 class SpringRoll : public Product {};
 class IceCream : public Product {};
 class ApplePie: public Product {};
@@ -26,27 +29,34 @@ class SpringRollMachine : public Machine {
     deque<unique_ptr<SpringRoll>> queue;
     atomic<bool> running;
     int const COUNT = 100;
+    atomic<bool> vacant1, vacant2;
 public:
 
-    SpringRollMachine(): running(false) {}
+    SpringRollMachine(): running(), vacant1(), vacant2() {}
 
     unique_ptr<Product> getProduct() override {
+        if (vacant1) throw UnsafeGetProductException();
         if (!running) throw MachineNotWorking();
+        vacant1 = true;
         wcount++;
         unique_lock<std::mutex> lock(mutex);
         cond.wait(lock, [this]() { return !queue.empty(); });
         wcount--;
         auto product = std::move(queue.front());
         queue.pop_front();
+        vacant1 = false;
         return product;
     }
 
     void returnProduct(unique_ptr<Product> product) override {
+        if (vacant2) throw UnsafeReturnProductException();
         if (!checkType<SpringRoll>(product.get())) throw BadProductException();
         if (!running) throw MachineNotWorking();
+        vacant2 = true;
         lock_guard<std::mutex> lock(mutex);
         queue.push_front((unique_ptr<SpringRoll> &&) (std::move(product)));
         cond.notify_one();
+        vacant2 = false;
     }
 
     void start() override {
