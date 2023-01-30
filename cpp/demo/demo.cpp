@@ -79,6 +79,12 @@ check_report(vector<WorkerReport> const & reports)
     sort(failed_orders.begin(), failed_orders.end());
     sort(abandoned_orders.begin(), abandoned_orders.end());
 
+    auto const all_ice_cream = [] (vector<string> const & v) {
+        return ranges::all_of(v.begin(), v.end(), [] (auto const & n) {
+            return n == "iceCream";
+        });
+    };
+
     for (WorkerReport const & report: reports) {
         for (vector<string> const & order: report.collectedOrders)
             r1.emplace_back(get_code(order));
@@ -86,6 +92,7 @@ check_report(vector<WorkerReport> const & reports)
             r2.emplace_back(get_code(order));
         for (vector<string> const & order: report.abandonedOrders)
             r3.emplace_back(get_code(order));
+        assert(all_ice_cream(report.failedProducts));
         if (!report.failedProducts.empty())
             r4 = true;
     }
