@@ -35,7 +35,7 @@ sajgonek jest o wiele więcej niż przygotowana ilość, ale poprawne zamówieni
 poza ten limit, dlatego ważne jest, żeby sajgonki docierały w kolejności zamówień. Dodatkowo,
 sajgonek jest dokładnie 100, dlatego nie można zmarnować ani jednej sajgonki. W drugim teście
 jest duża szansa, że pracownicy spróbują pobrać/zwrócić sajgonkę w tym samym czasie, wtedy
-maszyna rzuca wyjątek BadGetProductException/BadReturnProductException.
+maszyna rzuca wyjątek UnsafeGetProductException/UnsafeReturnProductException.
 
 - Performance Tests
 
