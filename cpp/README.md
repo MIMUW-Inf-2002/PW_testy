@@ -19,8 +19,8 @@ i uruchomić skrypt, np. poleceniem `./test.sh`. Oczekiwane wyjście jest zapisa
 program był uruchamiany na students.
 
 ## testy
-Pliki zostawiamy tak jak powyżej, ale tutaj już wystarczy skompilować kod przez `make -j15`
-(`-j15` na studentsie), a potem wpisać `./main`, ewentualnie
+Pliki zostawiamy tak jak powyżej, ale tutaj już wystarczy skompilować kod przez `make -j8`
+(`-j` zależy od rdzeni i RAM), a potem wpisać `./main`, ewentualnie
 `LD_LIBRARY_PATH=/opt/gcc-11.1/lib64 ./main`. Można też `./main 2>/dev/null`.
 Oczekiwane wyjście jest zapisane w `expected.txt`.
 
