@@ -5,7 +5,7 @@ SRC += ${addprefix saosau/, returns.cpp}
 
 OBJ = ${SRC:.cpp=.o}
 #OBJ = ${SRC_T:.cc=.o}
-# CXX = /opt/gcc-11.1/bin/g++-11.1
+CXX = /opt/gcc-11.1/bin/g++-11.1
 CXXFLAGS = -O2 -std=c++20 -I${PWD}
 LDFLAGS = -lpthread
 

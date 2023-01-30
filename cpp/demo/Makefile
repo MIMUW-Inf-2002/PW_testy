@@ -1,6 +1,6 @@
 SRC = main.cpp demo.cpp system.cpp
 OBJ = ${SRC:.cpp=.o}
-# CXX = /opt/gcc-11.1/bin/g++-11.1
+CXX = /opt/gcc-11.1/bin/g++-11.1
 CXXFLAGS = -O2 -std=c++20
 LDFLAGS = -lpthread
 
