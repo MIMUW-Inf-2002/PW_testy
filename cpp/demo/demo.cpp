@@ -10,7 +10,7 @@
 #define GOOD cerr << "GOOD" << endl
 #define BAD cerr << "BAD" << endl; exit(1)
 #define REPORT(shutdown) auto r = shutdown; \
-if (check_reports && !check_report(r)) \
+if (!check_report(r) && check_reports) \
     throw BadReportException()
 
 using namespace std;
@@ -193,7 +193,7 @@ public:
 void
 demo() {
 
-    check_reports = true;
+    check_reports = false;
     std::vector<bool> which = {true, true, true, true};
 
     if (which[0]) {
