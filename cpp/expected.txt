@@ -1,4 +1,4 @@
-Demo Tests 1/4 - Basic (takes 17 seconds)
+Demo Tests 1/4 - Basic (takes 11 seconds)
 CONSTRUCTOR: GOOD
 ONE WORKER, SIMPLE ORDERS: GOOD
 ONE WORKER, BIG ORDERS: GOOD
@@ -12,15 +12,21 @@ caught FulfillmentFailure -> caught BadOrderException -> caught BadOrderExceptio
 NOT READY, CLIENT WAS TOO HASTY: caught OrderNotReadyException -> GOOD
 EXPIRED, CLIENT TROLLED YOU: caught OrderExpiredException -> GOOD
 
-Demo Tests 3/4 - Getters (takes 13 seconds)
+Demo Tests 3/4 - Getters (takes 6 seconds)
 GET_TIMEOUT: GOOD
 GET_MENU: caught FulfillmentFailure -> GOOD
 GET_PENDING_ORDERS: (pending count - expected count)
-19-19, 18-18, 17-17, 16-16, 15-15, 14-14, 13-13, 12-12, 11-11, 10-10, 9-9, 8-8, 7-7, 6-6, 5-5, 4-4, 3-3, 2-2, 1-1, 0-0, GOOD
+12-12, 11-11, 10-10, 9-9, 8-8, 7-7, 6-6, 5-5, 4-4, 3-3, 2-2, 1-1, 0-0, GOOD
 
 Demo Tests 4/4 - Original (takes 2 seconds)
 DEMO: OK OK OK
 
-Returns Tests (takes less than 3 seconds)
-WORKERS RETURN ON FAILURE: caught FulfillmentFailure -> caught FulfillmentFailure -> GOOD
-WORKERS RETURN ON TIMEOUT: caught OrderExpiredException -> caught OrderExpiredException -> GOOD
+Returns Tests (takes 3 seconds)
+WORKERS RETURN ON FAILURE: caught BadOrderException -> caught BadOrderException -> caught BadOrderException -> caught FulfillmentFailure -> caught FulfillmentFailure -> caught FulfillmentFailure -> caught FulfillmentFailure -> caught FulfillmentFailure -> caught FulfillmentFailure -> caught FulfillmentFailure -> GOOD
+WORKERS RETURN ON TIMEOUT: caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> caught OrderExpiredException -> GOOD
+
+Performance Tests (takes a second)
+PERFORMANCE: caught FulfillmentFailure -> GOOD
+
+Concurrent Tests (takes 8-9 seconds)
+[2KOrders left: 395[2KOrders left: 198[2KOrders left: 198[2KOrders left: 196[2KOrders left: 195[2KOrders left: 195[2KOrders left: 192[2KOrders left: 192[2KOrders left: 191[2KOrders left: 189[2KOrders left: 188[2KOrders left: 187[2KOrders left: 186[2KOrders left: 184[2KOrders left: 183[2KOrders left: 182[2KOrders left: 181[2KOrders left: 179[2KOrders left: 178[2KOrders left: 177[2KOrders left: 176[2KOrders left: 174[2KOrders left: 173[2KOrders left: 172[2KOrders left: 170[2KOrders left: 170[2KOrders left: 168[2KOrders left: 167[2KOrders left: 166[2KOrders left: 164[2KOrders left: 163[2KOrders left: 162[2KOrders left: 160[2KOrders left: 159[2KOrders left: 158[2KOrders left: 156[2KOrders left: 156[2KOrders left: 154[2KOrders left: 153[2KOrders left: 153[2KOrders left: 150[2KOrders left: 149[2KOrders left: 148[2KOrders left: 146[2KOrders left: 146[2KOrders left: 144[2KOrders left: 143[2KOrders left: 142[2KOrders left: 140[2KOrders left: 139[2KOrders left: 139[2KOrders left: 137[2KOrders left: 136[2KOrders left: 135[2KOrders left: 133[2KOrders left: 132[2KOrders left: 130[2KOrders left: 130[2KOrders left: 128[2KOrders left: 127[2KOrders left: 126[2KOrders left: 125[2KOrders left: 123[2KOrders left: 122[2KOrders left: 121[2KOrders left: 120[2KOrders left: 118[2KOrders left: 117[2KOrders left: 116[2KOrders left: 114[2KOrders left: 113[2KOrders left: 112[2KOrders left: 111[2KOrders left: 110[2KOrders left: 108[2KOrders left: 107[2KOrders left: 106[2KOrders left: 104[2KOrders left: 103[2KOrders left: 102[2KOrders left: 100[2KOrders left: 100[2KOrders left: 98[2KOrders left: 97[2KOrders left: 96[2KOrders left: 94[2KOrders left: 93[2KOrders left: 92[2KOrders left: 90[2KOrders left: 90[2KOrders left: 88[2KOrders left: 87[2KOrders left: 86[2KOrders left: 84[2KOrders left: 84[2KOrders left: 82[2KOrders left: 81[2KOrders left: 80[2KOrders left: 78[2KOrders left: 77[2KOrders left: 76[2KOrders left: 74[2KOrders left: 74[2KOrders left: 72[2KOrders left: 71[2KOrders left: 70[2KOrders left: 69[2KOrders left: 67[2KOrders left: 66[2KOrders left: 64[2KOrders left: 64[2KOrders left: 62[2KOrders left: 61[2KOrders left: 60[2KOrders left: 58[2KOrders left: 57[2KOrders left: 56[2KOrders left: 55[2KOrders left: 54[2KOrders left: 52[2KOrders left: 51[2KOrders left: 50[2KOrders left: 48[2KOrders left: 47[2KOrders left: 46[2KOrders left: 44[2KOrders left: 44[2KOrders left: 42[2KOrders left: 41[2KOrders left: 40[2KOrders left: 38[2KOrders left: 38[2KOrders left: 36[2KOrders left: 35[2KOrders left: 34[2KOrders left: 32[2KOrders left: 31[2KOrders left: 30[2KOrders left: 28[2KOrders left: 28[2KOrders left: 26[2KOrders left: 25[2KOrders left: 24[2KOrders left: 22[2KOrders left: 21[2KOrders left: 20[2KOrders left: 18[2KOrders left: 18[2KOrders left: 16[2KOrders left: 15[2KOrders left: 14[2KOrders left: 12[2KOrders left: 11[2KOrders left: 10[2KOrders left: 8[2KOrders left: 8[2KOrders left: 6[2KOrders left: 5[2KOrders left: 4[2KOrders left: 2[2KOrders left: 1[2KCONCURRENT: caught IncompetentFoolException 200 times -> GOOD

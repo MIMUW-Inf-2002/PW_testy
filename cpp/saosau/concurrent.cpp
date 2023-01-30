@@ -1,4 +1,3 @@
-#include <cassert>
 #include <iostream>
 #include <algorithm>
 #include "system.hpp"
@@ -21,84 +20,6 @@ bool checkType(const V* v) {
 }
 
 class BadReportException: public exception {};
-
-bool check_reports;
-vector<string> fulfilled_orders;
-vector<string> failed_orders;
-vector<string> abandoned_orders;
-bool failed_products; // Only ice_cream machine fails
-
-string
-get_code(vector<string> const & order)
-{
-    string code;
-    int burgers, chips, ice_creams, garbage;
-
-    burgers = chips = ice_creams = garbage = 0;
-    for (string const & product: order) {
-        if (product == "burger")
-            ++burgers;
-        else if (product == "chips")
-            ++chips;
-        else if (product == "iceCream")
-            ++ice_creams;
-        else
-            ++garbage;
-    }
-    code.push_back((char) burgers);
-    code.push_back((char) chips);
-    code.push_back((char) ice_creams);
-    code.push_back((char) garbage);
-
-    return code;
-}
-
-void
-set_expected(vector<vector<string>> const & fulfilled,
-             vector<vector<string>> const & failed,
-             vector<vector<string>> const & abandoned, bool ice_cream)
-{
-    fulfilled_orders.clear();
-    failed_orders.clear();
-    abandoned_orders.clear();
-    for (vector<string> const & order: fulfilled)
-        fulfilled_orders.emplace_back(get_code(order));
-    for (vector<string> const & order: failed)
-        failed_orders.emplace_back(get_code(order));
-    for (vector<string> const & order: abandoned)
-        abandoned_orders.emplace_back(get_code(order));
-    failed_products = ice_cream;
-}
-
-bool
-check_report(vector<WorkerReport> const & reports)
-{
-    vector<string> r1, r2, r3;
-    bool r4 = false; // True, if failed product exists.
-
-    sort(fulfilled_orders.begin(), fulfilled_orders.end());
-    sort(failed_orders.begin(), failed_orders.end());
-    sort(abandoned_orders.begin(), abandoned_orders.end());
-
-    for (WorkerReport const & report: reports) {
-        for (vector<string> const & order: report.collectedOrders)
-            r1.emplace_back(get_code(order));
-        for (vector<string> const & order: report.failedOrders)
-            r2.emplace_back(get_code(order));
-        for (vector<string> const & order: report.abandonedOrders)
-            r3.emplace_back(get_code(order));
-        if (!report.failedProducts.empty())
-            r4 = true;
-    }
-
-    sort(r1.begin(), r1.end());
-    sort(r2.begin(), r2.end());
-    sort(r3.begin(), r3.end());
-
-    // Breakpoint here if you have problems with reports.
-    return fulfilled_orders == r1 && failed_orders == r2 &&
-        abandoned_orders == r3 && failed_products == r4;
-}
 
 class Burger : public Product {};
 class IceCream : public Product {};
@@ -238,6 +159,7 @@ namespace saosau {
         START("CONCURRENT: ");
         EXCEPT("IncompetentFoolException " + to_string(count) + " times");
         system.shutdown();
+        if (count != 200) { BAD; }
         GOOD;
     }
 }

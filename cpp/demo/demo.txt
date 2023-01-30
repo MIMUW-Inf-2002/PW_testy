@@ -6,7 +6,7 @@
 /opt/gcc-11.1/bin/g++-11.1 -o main main.o demo.o system.o -lpthread
 rm main.o demo.o system.o
 
-Demo Tests 1/4 - Basic (takes 17 seconds)
+Demo Tests 1/4 - Basic (takes 11 seconds)
 CONSTRUCTOR: GOOD
 ONE WORKER, SIMPLE ORDERS: GOOD
 ONE WORKER, BIG ORDERS: GOOD
@@ -20,11 +20,11 @@ caught FulfillmentFailure -> caught BadOrderException -> caught BadOrderExceptio
 NOT READY, CLIENT WAS TOO HASTY: caught OrderNotReadyException -> GOOD
 EXPIRED, CLIENT TROLLED YOU: caught OrderExpiredException -> GOOD
 
-Demo Tests 3/4 - Getters (takes 13 seconds)
+Demo Tests 3/4 - Getters (takes 6 seconds)
 GET_TIMEOUT: GOOD
 GET_MENU: caught FulfillmentFailure -> GOOD
 GET_PENDING_ORDERS: (pending count - expected count)
-19-19, 18-18, 17-17, 16-16, 15-15, 14-14, 13-13, 12-12, 11-11, 10-10, 9-9, 8-8, 7-7, 6-6, 5-5, 4-4, 3-3, 2-2, 1-1, 0-0, GOOD
+12-12, 11-11, 10-10, 9-9, 8-8, 7-7, 6-6, 5-5, 4-4, 3-3, 2-2, 1-1, 0-0, GOOD
 
 Demo Tests 4/4 - Original (takes 2 seconds)
 DEMO: OK OK OK
