@@ -150,7 +150,7 @@ auto flood(System & system, auto const & order, uint count) {
 
 void performance() {
     bool const check_reports = true;
-    std::vector<string> failed(600, "burger");
+    std::vector<string> failed(CHAR_MAX, "burger");
     failed.emplace_back("iceCream");
     set_expected(
         {20, vector<string>(5, "burger")},
