@@ -75,7 +75,7 @@ public:
 namespace saosau {
 void edgecases_test() {
     cerr << '\n';
-    cout << "Edge Cases Test (instant)" << endl;
+    cout << "Edge Cases Tests (instant)" << endl;
     /* Wolalbym rzucic illegal argument exception, ale tak naprawde, to
      * zgodnie z zadaniem test powinien sie zakonczyc deadlockiem. */
     // invoke([]{
