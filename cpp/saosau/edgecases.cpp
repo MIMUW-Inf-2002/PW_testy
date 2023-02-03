@@ -241,5 +241,37 @@ void edgecases_test() {
     //     system.collectOrder(std::move(pager));
     //     GOOD;
     // });
+    
+    /* Ostatni sanity check, jezeli mamy jednego pracownika, to
+     * ryz powinnismy dostac dopiero po 3 sekundach, a jezeli
+     * 14, to od razu. */
+    // invoke([] {
+    //     chrono::steady_clock sc;
+    //     static uint const workers = 1; // Tutaj zmienic
+    //     static uint minimum_time = workers == 14 ? 0 : 2;
+    //     START("WORKERS ACTUALLY EXIST: ");
+    //     System system {
+    //         {{"rice", shared_ptr<Machine>(new RiceCooker())},
+    //          {"burger", shared_ptr<Machine>(new BurgerMachine())}},
+    //         workers, 1
+    //     };
+    //     auto start = sc.now();
+    //     vector<unique_ptr<CoasterPager>> pager;
+    //     for (uint i = 0; i < 13; ++i)
+    //         pager.emplace_back(system.order({"burger"}));
+    //     jthread jthr([&pager, &system] {
+    //         for (auto & n: pager) {
+    //             n->wait();
+    //             system.collectOrder(std::move(n));
+    //         }
+    //     });
+    //     auto p = system.order({"rice"});
+    //     p->wait();
+    //     auto time = static_cast<chrono::duration<double>>(sc.now() - start);
+    //     START(to_string(time.count()) + " -> ");
+    //     system.shutdown();
+    //     if ((uint) time.count() < minimum_time) { BAD; }
+    //     GOOD;
+    // });
 }
 }
