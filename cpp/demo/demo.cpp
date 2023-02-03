@@ -225,9 +225,11 @@ demo() {
              1, 100 * SECOND};
             auto p1 = system.order({"burger", "burger"});
             p1->wait();
+            assert(p1->isReady());
             auto o1 = system.collectOrder(std::move(p1));
             auto p2 = system.order({"chips", "chips"});
             p2->wait();
+            assert(p2->isReady());
             auto o2 = system.collectOrder(std::move(p2));
             assert(checkType<Burger>(o1[0].get()));
             assert(checkType<Chips>(o2[1].get()));
@@ -246,8 +248,10 @@ demo() {
             auto p1 = system.order(vector<string>(12, "burger"));
             auto p2 = system.order(vector<string>(10, "chips"));
             p1->wait();
+            assert(p1->isReady());
             auto o1 = system.collectOrder(std::move(p1));
             p2->wait();
+            assert(p2->isReady());
             auto o2 = system.collectOrder(std::move(p2));
             assert(checkType<Burger>(o1[11].get()));
             assert(checkType<Chips>(o2[9].get()));
@@ -265,9 +269,11 @@ demo() {
             10, 100 * SECOND};
             auto p1 = system.order({"burger", "burger"});
             p1->wait();
+            assert(p1->isReady());
             auto o1 = system.collectOrder(std::move(p1));
             auto p2 = system.order({"chips", "chips"});
             p2->wait();
+            assert(p2->isReady());
             auto o2 = system.collectOrder(std::move(p2));
             assert(checkType<Burger>(o1[0].get()));
             assert(checkType<Chips>(o2[1].get()));
@@ -462,8 +468,8 @@ demo() {
                     vector.emplace_back(system.order({name}));
                 return vector;
             };
-
             auto p = flood("burger", i);
+            std::jthread jthr([&system] { REPORT(system.shutdown()); });
             assert(system.getPendingOrders().size() == i);
             assert(ranges::all_of(p.begin(), p.end(), [&system, &i](auto &n) {
                 n->wait();
@@ -473,7 +479,6 @@ demo() {
                 fflush(stdout);
                 return size == i;
             }));
-            REPORT(system.shutdown());
             GOOD;
         });
         cerr << '\n';
