@@ -1,7 +1,8 @@
 # To add your project do:
 # SRC += ${addprefix project/, files}
 SRC = main.cpp system.cpp demo/demo.cpp
-SRC += ${addprefix saosau/, returns.cpp performance.cpp concurrent.cpp}
+SRC += ${addprefix saosau/, returns.cpp \
+	     performance.cpp concurrent.cpp edgecases.cpp}
 
 OBJ = ${SRC:.cpp=.o}
 #OBJ = ${SRC_T:.cc=.o}
