@@ -76,8 +76,8 @@ namespace saosau {
 void edgecases_test() {
     cerr << '\n';
     cout << "Edge Cases Tests (instant)" << endl;
-    /* Wolalbym rzucic illegal argument exception, ale tak naprawde, to
-     * zgodnie z zadaniem test powinien sie zakonczyc deadlockiem. */
+    /* Wolałbym rzucić illegal argument exception, ale tak naprawdę, to
+     * zgodnie z zadaniem test powinien się zakonczyć deadlockiem. */
     // invoke([]{
     //     bool flag[2] = {false, false};
     //     START("NO WORKERS: ");
@@ -185,10 +185,10 @@ void edgecases_test() {
         GOOD;
     });
 
-    /* Tresc zadania gwarantuje, ze taki case sie nie zdarzy, ale
-     * moze byc to dobry sanity check na warunek, zeby nie oddawac
-     * zamowienia o numerze, ktory juz zostal odebrany.
-     * Chyba, ze ktos wpadnie na pomysl jak obejsc domyslny deleter
+    /* Treść zadania gwarantuje, że taki case się nie zdarzy, ale
+     * może być to dobry sanity check na warunek, zeby nie oddawać
+     * zamówienia o numerze, ktory już został odebrany.
+     * Chyba, że ktoś wpadnie na pomysł jak obejść domyślny deleter
      * klasy unique_ptr. */
     // invoke([] {
     //     bool flag = false;
@@ -218,8 +218,8 @@ void edgecases_test() {
     //     GOOD;
     // });
 
-    /* Ja bym rzucil overflow error. Tak naprawde, to nigdy tego testu
-     * nie odpalilem i nie polecam. */
+    /* Ja bym rzucił overflow error. Tak naprawdę, to nigdy tego testu
+     * nie odpaliłem i nie polecam. */
     // invoke([] {
     //     START("ORDERS OVERFLOW: ");
     //     System system {
@@ -242,8 +242,8 @@ void edgecases_test() {
     //     GOOD;
     // });
     
-    /* Ostatni sanity check, jezeli mamy jednego pracownika, to
-     * ryz powinnismy dostac dopiero po 3 sekundach, a jezeli
+    /* Ostatni sanity check, jeżeli mamy jednego pracownika, to
+     * ryż powinniśmy dostać dopiero po 3 sekundach, a jeżeli
      * 14, to od razu. */
     // invoke([] {
     //     chrono::steady_clock sc;
