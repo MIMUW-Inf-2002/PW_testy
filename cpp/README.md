@@ -46,3 +46,9 @@ wykonania zamówienia po błędzie.
 
 Mamy 5 klientów, którzy korzystają z systemu naraz zamiawiając szczególne produkty. Piąta osoba próbuje
 narobić zamieszania wywołując resztę metod i składając puste zamówienia.
+
+- Edge Cases Tests
+
+Niektóre testy są wykomentowane ze względu na specyfikę treści zadania.
+Mimo to, jednak warto spróbować przez nie przejść, przynajmniej wtedy
+jesteśmy świadom jak nasz program reaguje na dziwne sytuacje.
