@@ -109,8 +109,8 @@ namespace saosau {
     void concurrent_test() {
         cerr << '\n';
         cout << "Concurrent Tests (takes 8-9 seconds)" << endl;
-        int count = 0;
         int const hunger = 100;
+        std::atomic<int> count(0);
         std::atomic<int> left(400);
         System system{
         {{"burger", shared_ptr<Machine>(new BurgerMachine())},
@@ -129,7 +129,7 @@ namespace saosau {
                     p->wait();
                     system.collectOrder(std::move(p));
                 } catch (...) {
-                    count++;
+                    ++count;
                 }
             }
         };
