@@ -49,6 +49,6 @@ narobić zamieszania wywołując resztę metod i składając puste zamówienia.
 
 - Edge Cases Tests
 
-Niektore testy sa wykomentowane ze wzgledu na specyfike tresci zadania.
-Mimo to, jednak warto sprobowac przez nie przejsc, przynajmniej wtedy
-jestesmy swiadom jak nasz program reaguje na dziwne sytuacje.
+Niektóre testy są wykomentowane ze względu na specyfikę treści zadania.
+Mimo to, jednak warto spróbować przez nie przejść, przynajmniej wtedy
+jesteśmy świadom jak nasz program reaguje na dziwne sytuacje.
